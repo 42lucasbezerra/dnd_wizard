@@ -1,7 +1,5 @@
 from django import forms
-from charloader.models import Document
+from charloader.models import Character
 
-class DocumentForm(forms.ModelForm):
-    class Meta:
-        model = Document
-        fields = ('description', 'document', )
+class UploadForm(forms.Form):
+    file = forms.FileField() # create the file input
