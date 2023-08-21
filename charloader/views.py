@@ -5,15 +5,13 @@ from django.urls import reverse
 
 from charloader.forms import UploadForm
 from charloader.models import Character
-from charloader.functions.functions import handle_uploaded_file
+from charloader.functions.functions import handle_uploaded_file, calculate_modifier
 
 import pandas as pd
 
 
 def loader(request, name):
     char = Character.objects.filter(name=name)[0]
-
-    # TODO: pass full character to render, add to loader.html
 
     return render(request, 'loader.html', {'char':char})
 
@@ -25,9 +23,12 @@ def index(request):
         if user_form.is_valid():
 
             # Parse information from character sheet
-            df, info_locations =  handle_uploaded_file(request.FILES['file'])
+            char_info =  handle_uploaded_file(request.FILES['file'])
 
-            # TODO: INSERT IF STATEMENT HERE TO CHECK THE CHARACTER DOES NOT ALREADY EXIST.
+            # Delete character if it already exists
+            if Character.objects.filter(name = char_info["name"]).exists():
+                Character.objects.filter(name = char_info["name"]).delete()
+                
             # Create character model object
             char = Character()
             prefix = "char."
@@ -41,7 +42,7 @@ def index(request):
 
             # Populate the character information (skip fieldnames[0] because it is 'id')
             for key in fieldnames[1:]:
-                operation = f"{prefix}{key} = df[info_locations[key][0]][info_locations[key][1]]"
+                operation = f"{prefix}{key} = char_info[key]"
                 try:
                     exec(operation)
                 except:
@@ -49,8 +50,6 @@ def index(request):
             
             # To save the character in the database uncomment below:
             char.save()
-            print('THE CHARACTER ID IS \n')
-            print(char.id)
 
             return HttpResponseRedirect(reverse("charloader:loader", kwargs={'name':char.name}))#render(request, 'loader.html', {'name':'Smander Beauregard'})
     else:
