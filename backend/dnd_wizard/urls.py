@@ -16,10 +16,15 @@ Including another URLconf
 from django.contrib import admin
 
 from django.urls import path, include
+from rest_framework import routers
+from charloader import views
 
-#from charloader import views as char_views
+
+router = routers.DefaultRouter()
+router.register(r'characters', views.CharacterView, 'todo')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("charloader/", include("charloader.urls")),
+    path('api/', include(router.urls))
 ]

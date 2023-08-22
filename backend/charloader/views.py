@@ -3,6 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.urls import reverse
 
+from rest_framework import viewsets
+from .serializers import CharacterSerializer
+
 from charloader.forms import UploadForm
 from charloader.models import Character
 from charloader.functions.functions import handle_uploaded_file, calculate_modifier
@@ -56,3 +59,7 @@ def index(request):
         user_form = UploadForm()
 
     return render(request, 'home.html',{'form':user_form})
+
+class CharacterView(viewsets.ModelViewSet):
+    serializer_class = CharacterSerializer
+    queryset = Character.objects.all()
