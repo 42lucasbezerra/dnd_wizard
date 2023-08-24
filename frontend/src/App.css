@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+/* Custom CSS for active and inactive tabs */
+.nav-tabs .nav-link {
+  color: black; /* Default color for inactive tabs */
+  background-color: transparent; /* Default background color for inactive tabs */
+}
+
+.nav-tabs .nav-link.active {
+  color: white; /* Text color for active tab */
+  background-color: black; /* Background color for active tab */
+}
