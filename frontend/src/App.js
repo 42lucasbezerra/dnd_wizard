@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Modal from "./components/Modal";
 
 /* Option for d20 button, potentially!
 <a href={process.env.PUBLIC_URL + '/dice-d20.svg'} target="_blank" rel="noopener noreferrer" className="d20-button">
@@ -126,8 +127,32 @@ class App extends Component {
     this.state = {
       characterList: Character,
       whichView: "skills",
+      modal: false,
+      activeItem: "",
     };
   }
+
+  toggle = () => {
+    this.setState({ modal: !this.state.modal });
+  };
+
+  handleSubmit = (item) => {
+    this.toggle();
+
+    const { Character, activeItem } = this.state;
+    const updatedCharacter = item;
+    this.setState({
+      characterList: updatedCharacter,
+      modal: false,
+      activeItem: ''
+    });
+
+    alert("save " + JSON.stringify(updatedCharacter));
+  };
+
+  editItem = (activeItem) => {
+    this.setState({ activeItem: activeItem, modal: true });
+  };
 
   displayView = (status) => {
     return this.setState({ whichView: status });
@@ -190,7 +215,8 @@ class App extends Component {
                 </span>
               </td>
               <td>
-                <button className="btn btn-secondary mr-2">Edit</button>
+                <button className="btn btn-secondary mr-2"
+                onClick={() => this.editItem(attributeTitle)}>Edit</button>
                 <button className="btn btn-primary" onClick={() => this.handleRoll(attribute)}>
                 Roll
                 </button>
@@ -218,6 +244,14 @@ class App extends Component {
             </div>
           </div>
         </div>
+        {this.state.modal ? (
+          <Modal
+            activeItem={this.state.activeItem}
+            Character={this.state.characterList}
+            toggle={this.toggle}
+            onSave={this.handleSubmit}
+          />
+        ) : null}
       </main>
     );
   }
