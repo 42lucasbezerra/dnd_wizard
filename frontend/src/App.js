@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
+import axios from "axios";
 
 /* Option for d20 button, potentially!
 <a href={process.env.PUBLIC_URL + '/dice-d20.svg'} target="_blank" rel="noopener noreferrer" className="d20-button">
   <span role="img" aria-label="d20">🎲</span>
-</a> */
+</a> 
 
 const Character = 
   {
@@ -56,7 +57,7 @@ const Character =
     sleight_of_hand: 4,
     stealth: 4,
     survival: 0,
-  }
+  }*/
 
 const info = [
   'character_class', 
@@ -125,12 +126,24 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      characterList: Character,
+      characterID: "14",
+      characterList: {},
       whichView: "skills",
       modal: false,
       activeItem: "",
     };
   }
+
+  componentDidMount() {
+    this.refreshList();
+  }
+
+  refreshList = () => {
+    axios
+      .get("http://localhost:8000/api/characters/12/")
+      .then((res) => this.setState({ characterList: res.data }))
+      .catch((err) => console.log(err));
+  };
 
   toggle = () => {
     this.setState({ modal: !this.state.modal });
@@ -139,15 +152,15 @@ class App extends Component {
   handleSubmit = (item) => {
     this.toggle();
 
-    const { Character, activeItem } = this.state;
-    const updatedCharacter = item;
-    this.setState({
-      characterList: updatedCharacter,
-      modal: false,
-      activeItem: ''
-    });
-
-    alert("save " + JSON.stringify(updatedCharacter));
+    if (item.id) {
+      axios
+        .put(`http://localhost:8000/api/characters/${item.id}/`, item)
+        .then((res) => this.refreshList());
+      return;
+    }
+    axios
+      .post("http://localhost:8000/api/characters/", item)
+      .then((res) => this.refreshList());
   };
 
   editItem = (activeItem) => {
@@ -193,7 +206,7 @@ class App extends Component {
       <table className="table">
       <tbody>
         {attributesToRender.map((attributeTitle) => {
-          const attribute = Character[attributeTitle];
+          const attribute = this.state.characterList[attributeTitle];
           return (
             <tr key={attributeTitle}>
               <td>
@@ -233,7 +246,7 @@ class App extends Component {
   render() {
     return (
       <main className="container">
-          {renderCharacterName(Character)}
+          {renderCharacterName(this.state.characterList)}
         <div className="row">
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">

@@ -15,16 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
 from charloader import views
 
 
 router = routers.DefaultRouter()
-router.register(r'characters', views.CharacterView, 'todo')
+router.register(r'characters', views.CharacterView, 'characters')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("charloader/", include("charloader.urls")),
     path('api/', include(router.urls))
 ]
