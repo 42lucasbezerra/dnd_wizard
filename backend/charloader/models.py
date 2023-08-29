@@ -74,3 +74,21 @@ class Character(models.Model):
 
     #class Meta:
     #    constraints =  [models.UniqueConstraint(fields=["name", "character_class", "race", "player_name"], name ='unique_character')]
+
+class Spells(models.Model):
+    """
+    5e spell information
+    """
+    spell_id = models.IntegerField(primary_key=True)
+    spell_name = models.CharField(max_length = 50)
+    spell_level = models.IntegerField(default = 0, null = True, blank = True)
+    spell_type = models.CharField(max_length = 50, blank = True, null = True)
+    casting_time = models.CharField(max_length = 50, blank = True, null = True)
+    spell_range = models.CharField(max_length = 50, blank = True, null = True)
+    components = models.TextField(null = True, blank = True)
+    duration = models.CharField(max_length = 50, blank = True, null = True)
+    notes = models.TextField(null = True, blank = True)
+    higher_levels = models.TextField(null = True, blank = True)
+
+    def __str__(self):
+        return self.name.capitalize()
