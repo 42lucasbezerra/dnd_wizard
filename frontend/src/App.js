@@ -84,6 +84,12 @@ const stats = [
   'intelligence',
   'wisdom',
   'charisma',
+  'strength_modifier',
+  'dexterity_modifier',
+  'constitution_modifier',
+  'intelligence_modifier',
+  'wisdom_modifier',
+  'charisma_modifier',
 ]
 
 const saving_throws = [
@@ -140,7 +146,7 @@ class App extends Component {
 
   refreshList = () => {
     axios
-      .get("http://localhost:8000/api/characters/12/")
+      .get("http://localhost:8000/api/characters/"+ this.state.characterID + "/")
       .then((res) => this.setState({ characterList: res.data }))
       .catch((err) => console.log(err));
   };
@@ -246,8 +252,14 @@ class App extends Component {
   render() {
     return (
       <main className="container">
+        <div class="p-3 mb-2 bg-info text-white">
           {renderCharacterName(this.state.characterList)}
+        </div>
         <div className="row">
+          <div className="col-md-6 col-sm-10 mx-auto p-0">
+            <h3><center>Character Stats</center></h3>
+            <p> AYYYY</p>
+          </div>
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
               {this.renderTabList()}

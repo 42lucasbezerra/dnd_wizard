@@ -47,3 +47,10 @@
   color: white; /* Text color for active tab */
   background-color: black; /* Background color for active tab */
 }
+
+.left-panel {
+  width: 300px; /* Adjust width as needed */
+  background-color: #6b6b6b; /* Set background color */
+  padding: 20px;
+  /* Add other styling as needed */
+}

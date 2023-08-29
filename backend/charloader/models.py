@@ -37,6 +37,26 @@ class Character(models.Model):
     wisdom = models.PositiveIntegerField(default=10, verbose_name = 'Wisdom Score', blank=True, null=True)
     charisma = models.PositiveIntegerField(default=10, verbose_name = 'Charisma Score', blank=True, null=True)
     
+    # Modifiers
+    @property
+    def strength_modifier(self):
+        return (self.strength - 10) // 2
+    @property
+    def dexterity_modifier(self):
+        return (self.dexterity - 10) // 2
+    @property
+    def constitution_modifier(self):
+        return (self.constitution - 10) // 2
+    @property
+    def intelligence_modifier(self):
+        return (self.intelligence - 10) // 2
+    @property
+    def wisdom_modifier(self):
+        return (self.wisdom - 10) // 2
+    @property
+    def charisma_modifier(self):
+        return (self.charisma - 10) // 2
+
     # Saving throws
     saving_throw_strength = models.IntegerField(default=0, verbose_name = 'Strength Saving Throw', blank=True, null=True)
     saving_throw_dexterity = models.IntegerField(default=0, verbose_name = 'Dexterity Saving Throw', blank=True, null=True)
@@ -66,7 +86,8 @@ class Character(models.Model):
     survival = models.IntegerField(default=0, verbose_name = 'Survival Modifier', blank = True, null = True)
 
     # Attacks
-    weapons = models.JSONField(null=True)
+    weapons = models.JSONField(blank = True, null=True)
+    spells = models.JSONField(blank = True, null=True)
 
     
     def __str__(self):
@@ -75,7 +96,7 @@ class Character(models.Model):
     #class Meta:
     #    constraints =  [models.UniqueConstraint(fields=["name", "character_class", "race", "player_name"], name ='unique_character')]
 
-class Spells(models.Model):
+class Spell(models.Model):
     """
     5e spell information
     """
@@ -89,6 +110,32 @@ class Spells(models.Model):
     duration = models.CharField(max_length = 50, blank = True, null = True)
     notes = models.TextField(null = True, blank = True)
     higher_levels = models.TextField(null = True, blank = True)
+
+    def __str__(self):
+        return self.spell_name.capitalize()
+    
+
+class Weapon(models.Model):
+    """
+    5e weapon information
+    """
+
+    name = models.CharField(max_length = 30)
+    weapon_type = models.CharField(max_length = 10)
+    damage_dice = models.CharField(max_length = 10)
+    damage_type = models.CharField(max_length = 20)
+    range = models.CharField(max_length = 10)
+    ammunition = models.BooleanField()
+    finesse = models.BooleanField()
+    heavy = models.BooleanField()
+    light = models.BooleanField()
+    loading = models.BooleanField()
+    reach = models.BooleanField()
+    special = models.BooleanField()
+    thrown = models.BooleanField()
+    two_handed = models.BooleanField()
+    versatile = models.BooleanField()
+    monk = models.BooleanField()
 
     def __str__(self):
         return self.name.capitalize()
