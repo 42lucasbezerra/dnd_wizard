@@ -2,7 +2,7 @@ import pandas as pd
 
 def handle_uploaded_file(f):
 
-    df1 = pd.read_excel(f, header=None, sheet_name='Stats and Profs.')
+    df1 = pd.read_excel(f, header=None, sheet_name='Stats and Profs.', engine='openpyxl')
 
     # Replace NaN with none
     df = df1.where(pd.notnull(df1), None)

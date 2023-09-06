@@ -67,7 +67,7 @@ const info = [
   'alignment'
 ]
 
-const stats_2 = [
+const stats = [
   'armor_class',
   'initiative',
   'inspiration',
@@ -78,6 +78,18 @@ const stats_2 = [
   'total_hit_points',
   'current_hit_points',
   'temporary_hit_points',
+  'strength',
+  'dexterity',
+  'constitution',
+  'intelligence',
+  'wisdom',
+  'charisma',
+  'strength_modifier',
+  'dexterity_modifier',
+  'constitution_modifier',
+  'intelligence_modifier',
+  'wisdom_modifier',
+  'charisma_modifier',
 ]
 
 const saving_throws = [
@@ -110,82 +122,56 @@ const skills = [
   'survival',
 ]
 
-// Helper function to capitalize the first letter of a string
-function capitalizeFirstLetter(string) {
-  const words = string.split(" ");
 
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-  }
-  return words.join(" ");
-}
-
-function renderCharacterInfo(character) {
-  return (
-    <div>
-      <h1 className="text-black text-uppercase text-center my-4">{character.name}</h1>
-      {info.map((field) => (
-      <p key = {field} className="text-center">{capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}</p>
-      ))}
-    </div>
-  );
+function renderCharacterName(character) {
+  return <h1 className="text-black text-uppercase text-center my-4">{character.name}</h1>
+  // Change to renderCharacterInfo and add all the character information in order
 }
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      characterID: 0,
       characterList: {},
       whichView: "skills",
       modal: false,
       activeItem: "",
       selectedFile: null,
-      uploaded: false,
     };
   }
 
   onFileChange = event => {
-    this.setState({ selectedFile: event.target.files[0], uploaded: false });
+    this.setState({ selectedFile: event.target.files[0] });
   }
 
   // On file upload (click the upload button)
   onFileUpload = async (event) => {
-  
-    if (this.state.selectedFile) {
+    
+    // Create an object of formData
+    const formData = new FormData();
 
-      // Create an object of formData
-      const formData = new FormData();
+    // Update the formData object
+    formData.append(
+        "myFile",
+        this.state.selectedFile,
+        this.state.selectedFile.name,
+    );
 
-      // Update the formData object
-      formData.append(
-          "myFile",
-          this.state.selectedFile,
-      );
+    // Request made to the backend api
+    // Send formData object
+    const response = await axios.post("http://localhost:8000/api/uploadfile", formData);
 
-      // Request made to the backend api
-      // Send formData object
-      try {
-        const response = await axios.post("http://127.0.0.1:8000/api/uploadfile/", formData, {
-            headers: {
-                'content-type': 'multipart/form-data',
-            }
-        });
+    if (response.ok) {
+      const characterID = response.data.id;
 
-        const charID = response.data.id;
-        this.setState({ uploaded: true, characterID: charID }, () => {
-            // After setting the state, call refreshList with the updated characterID
-            this.refreshList(charID);
-        });
-      } catch (error) {
-          console.error("Error uploading file:", error);
-      }
+      // Use the newly created object's id to fetch its details
+      this.refreshList(characterID);
     }
   };
 
-  refreshList = () => {
+  refreshList = (characterID) => {
     axios
-      .get("http://localhost:8000/api/characters/" + String(this.state.characterID) + "/")
+      .get("http://localhost:8000/api/characters/${characterID}/")
       .then((res) => this.setState({ characterList: res.data }))
       .catch((err) => console.log(err));
   };
@@ -216,62 +202,6 @@ class App extends Component {
     return this.setState({ whichView: status });
   };
 
-
-  handleRoll = (attribute) => {
-    // Simulate rolling a 20-sided die (d20)
-    const d20Roll = Math.floor(Math.random() * 20) + 1;
-  
-    // Calculate the total by adding the d20 roll and the modifier
-    const total = d20Roll + attribute;
-  
-    // Display the result or perform any other actions you need
-    alert(`You rolled a d20: ${d20Roll}\nModifier: ${attribute}\nTotal: ${total}`);
-  };
-
-
-  renderStats = () => {
-    const mapping = {
-      strength: 'STR',
-      dexterity: 'DEX',
-      constitution: 'CON',
-      intelligence: 'INT',
-      wisdom: 'WIS',
-      charisma: 'CHA',
-    };
-
-    const stats = [
-      'strength',
-      'dexterity',
-      'constitution',
-      'intelligence',
-      'wisdom',
-      'charisma',
-    ];
-
-    return (
-      <div className="col-md-6 col-sm-10 mx-auto p-0">
-        <h3><center>Ability Scores</center></h3>
-        {stats.map(stat => (
-        <div class="card border rounded mb-4" style={{width: '7rem', height: '7.3rem'}}>
-          <div class="card-body">
-            <h5 class="card-title">{mapping[stat]}</h5>
-            <h2 class="card-subtitle mb-2 text-muted">
-              {((modifier) => (modifier >= 0 ? `+${modifier}` : modifier))(
-                Math.floor((this.state.characterList[stat] - 10) / 2)
-              )}&nbsp;
-            </h2>
-            <div className="card border rounded-circle" style={{ width: '2.5rem', height: '2.3rem' }} key={stat}>
-              <div className="card-body d-flex flex-column justify-content-center align-items-center text-center">
-                <h6>{this.state.characterList[stat]}</h6>
-              </div>
-            </div>
-          </div>
-        </div>))}
-      </div>
-    );
-  };
-
-
   renderTabList = () => {
     const tabs = ['skills', 'saving_throws', 'spells', 'attacks'];
   
@@ -295,7 +225,9 @@ class App extends Component {
 
     let attributesToRender = [];
 
-    if (whichView === 'saving_throws') {
+    if (whichView === 'stats') {
+      attributesToRender = stats;
+    } else if (whichView === 'saving_throws') {
       attributesToRender = saving_throws;
     } else if (whichView === 'skills') {
       attributesToRender = skills;
@@ -342,14 +274,17 @@ class App extends Component {
 };
 
 charData = () => {
-  if (this.state.uploaded && this.state.selectedFile) {
+  if (this.state.selectdFile) {
     return (
       <main className="container">
         <div class="p-3 mb-2 bg-info text-white">
-          {renderCharacterInfo(this.state.characterList)}
+          {renderCharacterName(this.state.characterList)}
         </div>
         <div className="row">
-          {this.renderStats()}
+          <div className="col-md-6 col-sm-10 mx-auto p-0">
+            <h3><center>Character Stats</center></h3>
+            <p> AYYYY</p>
+          </div>
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
               {this.renderTabList()}
@@ -383,12 +318,12 @@ charData = () => {
 
   render() {
     return (
-      <div><center>
+      <div>
           <h1>
-              Character Uploader
+              GeeksforGeeks
           </h1>
           <h3>
-              Upload your character sheet below!
+              File Upload using React!
           </h3>
           <div>
               <input type="file" onChange={this.onFileChange} />
@@ -396,8 +331,7 @@ charData = () => {
                   Upload!
               </button>
           </div>
-          {this.charData()}
-      </center></div>
+      </div>
   );
   };
 }

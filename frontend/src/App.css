@@ -54,3 +54,12 @@
   padding: 20px;
   /* Add other styling as needed */
 }
+
+.card {
+  margin: 0; /* Remove any margin */
+}
+
+.card-body {
+  padding: 0rem; /* Add padding as needed to reduce whitespace */
+  margin: 0; /* Remove any margin */
+}

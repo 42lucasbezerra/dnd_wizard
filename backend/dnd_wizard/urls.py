@@ -25,5 +25,6 @@ router.register(r'characters', views.CharacterView, 'characters')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/uploadfile/', views.upload_file, name='uploadfile'),
 ]
