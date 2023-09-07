@@ -61,11 +61,11 @@ const Character =
 
 const info = [
   'character_class',
-  'level',
   'background',
   'player_name',
   'race',
   'alignment',
+  'level',
 ]
 
 const stats_2 = [
@@ -406,9 +406,6 @@ charData = () => {
     return (
       <main><center>
       <div class="container">
-          <h1>
-              Character Uploader
-          </h1>
           <h3>
               Upload your character sheet below!
           </h3>
