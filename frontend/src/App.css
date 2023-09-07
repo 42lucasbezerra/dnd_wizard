@@ -63,3 +63,7 @@
   padding: 0rem; /* Add padding as needed to reduce whitespace */
   margin: 0; /* Remove any margin */
 }
+
+.custom-container {
+  padding: 100;
+}

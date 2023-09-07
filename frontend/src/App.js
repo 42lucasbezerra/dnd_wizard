@@ -60,11 +60,12 @@ const Character =
   }*/
 
 const info = [
-  'character_class', 
+  'character_class',
+  'level',
   'background',
   'player_name',
   'race',
-  'alignment'
+  'alignment',
 ]
 
 const stats_2 = [
@@ -73,7 +74,6 @@ const stats_2 = [
   'inspiration',
   'proficiency',
   'speed',
-  'level',
   'experience_points',
   'total_hit_points',
   'current_hit_points',
@@ -123,10 +123,25 @@ function capitalizeFirstLetter(string) {
 function renderCharacterInfo(character) {
   return (
     <div>
-      <h1 className="text-black text-uppercase text-center my-4">{character.name}</h1>
-      {info.map((field) => (
-      <p key = {field} className="text-center">{capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}</p>
-      ))}
+      <h2 className="text-black text-uppercase text-center my-4">{character.name}</h2>
+      <div className="row">
+        {info.slice(0, 3).map((field) => (
+          <div className="col">
+            <h5 key={field} className="text-center">
+              {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
+            </h5>
+          </div>
+        ))}
+      </div>
+      <div className="row">
+          {info.slice(3).map((field) => (
+            <div className="col">
+              <h5 key={field} className="text-center">
+                {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
+              </h5>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
@@ -176,6 +191,13 @@ class App extends Component {
         this.setState({ uploaded: true, characterID: charID }, () => {
             // After setting the state, call refreshList with the updated characterID
             this.refreshList(charID);
+        
+            // Scroll to the element with id "scrollTarget"
+            const elementToScrollTo = document.getElementById("first_scroll");
+            if (elementToScrollTo) {
+              elementToScrollTo.scrollIntoView({ behavior: "smooth" });
+            }
+        
         });
       } catch (error) {
           console.error("Error uploading file:", error);
@@ -249,7 +271,7 @@ class App extends Component {
     ];
 
     return (
-      <div className="col-md-6 col-sm-10 mx-auto p-0">
+      <div className="col-3 mx-auto p-0">
         <h3><center>Ability Scores</center></h3>
         {stats.map(stat => (
         <div class="card border rounded mb-4" style={{width: '7rem', height: '7.3rem'}}>
@@ -344,10 +366,13 @@ class App extends Component {
 charData = () => {
   if (this.state.uploaded && this.state.selectedFile) {
     return (
-      <main className="container">
-        <div class="p-3 mb-2 bg-info text-white">
+      <div className="container-fluid">
+        <div class="p-2 mb-3 bg-info text-white mt-3">
+          <div className="container" id="first_scroll">
           {renderCharacterInfo(this.state.characterList)}
         </div>
+        </div>
+        <div className="container">
         <div className="row">
           {this.renderStats()}
           <div className="col-md-6 col-sm-10 mx-auto p-0">
@@ -358,6 +383,10 @@ charData = () => {
               </ul>
             </div>
           </div>
+          <div className="col mx-auto p-0">
+            <h4>Roll log</h4>
+          </div>
+        </div>
         </div>
         {this.state.modal ? (
           <Modal
@@ -367,14 +396,6 @@ charData = () => {
             onSave={this.handleSubmit}
           />
         ) : null}
-      </main>
-    );
-  }
-  else {
-    return (
-      <div>
-          <br />
-          <h4>Choose before Pressing the Upload button</h4>
       </div>
     );
   }
@@ -383,21 +404,25 @@ charData = () => {
 
   render() {
     return (
-      <div><center>
+      <main><center>
+      <div class="container">
           <h1>
               Character Uploader
           </h1>
           <h3>
               Upload your character sheet below!
           </h3>
+      
           <div>
               <input type="file" onChange={this.onFileChange} />
               <button onClick={this.onFileUpload}>
                   Upload!
               </button>
           </div>
+        </div>
           {this.charData()}
-      </center></div>
+      </center>
+      </main>
   );
   };
 }
