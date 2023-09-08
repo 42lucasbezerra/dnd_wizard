@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
+import './App.css';
 
 /* Option for d20 button, potentially!
 <a href={process.env.PUBLIC_URL + '/dice-d20.svg'} target="_blank" rel="noopener noreferrer" className="d20-button">
@@ -108,6 +109,12 @@ const skills = [
   'sleight_of_hand',
   'stealth',
   'survival',
+]
+
+const attacks = [
+  'name',
+  'proficiency',
+  'atk_bonus',
 ]
 
 // Helper function to capitalize the first letter of a string
@@ -239,6 +246,11 @@ class App extends Component {
   };
 
 
+  renderWeaponInfo = (weapon, extra) => {
+    console.log(`Weapon name is: ${weapon['name']}`);
+    console.log(`Extra info is: ${extra}`)
+  };
+
   handleRoll = (attribute) => {
     // Simulate rolling a 20-sided die (d20)
     const d20Roll = Math.floor(Math.random() * 20) + 1;
@@ -321,46 +333,88 @@ class App extends Component {
       attributesToRender = saving_throws;
     } else if (whichView === 'skills') {
       attributesToRender = skills;
+    } else if (whichView === 'attacks') {
+      attributesToRender = this.state.characterList['weapons'];
     }
 
+    if (whichView === 'saving_throws' || whichView === 'skills') {
+      return (
+        <table className="table">
+        <tbody>
+          <th>Name</th>
+          <th>Modifier</th>
+          {attributesToRender.map((attributeTitle) => {
+            const attribute = this.state.characterList[attributeTitle];
+            return (
+              <tr key={attributeTitle}>
+                <td>
+                  <span>
+                    {(attributeTitle.replace('saving_throw_','').charAt(0).toUpperCase() + attributeTitle.replace('saving_throw_','').slice(1)).replaceAll('_', ' ')}
+                  </span>
+                </td>
+                <td className="d-flex flex-column">
+                  <span>
+                    {attribute >= 0 ? "+" : ""}{attribute}
+                  </span>
+                </td>
+                <td>
+                  <button className="btn btn-secondary mr-2"
+                  onClick={() => this.editItem(attributeTitle)}>Edit</button>
+                  <button className="btn btn-primary" onClick={() => this.handleRoll(attribute)}>
+                  Roll
+                  </button>
+                  </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  } else if (whichView === 'attacks') {
     return (
       <table className="table">
       <tbody>
-        {attributesToRender.map((attributeTitle) => {
-          const attribute = this.state.characterList[attributeTitle];
+        <th>Name</th>
+        <th>Atk Bonus</th>
+        {attributesToRender.map((weapon_object) => {
+          console.log(weapon_object)
           return (
-            <tr key={attributeTitle}>
+            <tr key={weapon_object['name']}>
               <td>
-                <span
-                  className={`todo-title mr-2 ${
-                    this.state.whichView ? "completed-todo" : ""
-                  }`}
-                >
-                  {(attributeTitle.replace('saving_throw_','').charAt(0).toUpperCase() + attributeTitle.replace('saving_throw_','').slice(1)).replaceAll('_', ' ')}
+                <span>
+                  <span
+                    className={weapon_object['proficiency'] ? 'proficient-weapon' : 'non-proficient-weapon'}
+                    title={weapon_object['proficiency'] ? 'Proficient' : 'Not Proficient'}
+                  >
+                    {weapon_object['name']}
+                  </span>
+                  <span
+                    style={{ marginLeft: '5px', cursor: 'pointer' }}
+                    onClick={() => this.renderWeaponInfo(weapon_object, 34)}
+                  >
+                    ℹ️
+                  </span>
                 </span>
               </td>
               <td className="d-flex flex-column">
-                <span
-                  className={`todo-title ${
-                    this.state.whichView ? "completed-todo" : ""
-                  }`}
-                >
-                  {attribute}
+                <span>
+                  <center>{weapon_object['atk_bonus'] >= 0 ? "+" : ""}{weapon_object['atk_bonus']}</center>
                 </span>
               </td>
               <td>
                 <button className="btn btn-secondary mr-2"
-                onClick={() => this.editItem(attributeTitle)}>Edit</button>
-                <button className="btn btn-primary" onClick={() => this.handleRoll(attribute)}>
+                onClick={() => this.editItem(weapon_object)}>Edit</button>
+                <button className="btn btn-primary" onClick={() => this.handleRoll(weapon_object['atk_bonus'])}>
                 Roll
                 </button>
-                </td>
+              </td>
             </tr>
           );
         })}
       </tbody>
     </table>
   );
+  }
 };
 
 charData = () => {

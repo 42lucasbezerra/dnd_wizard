@@ -39,13 +39,13 @@
 
 /* Custom CSS for active and inactive tabs */
 .nav-tabs .nav-link {
-  color: black; /* Default color for inactive tabs */
+  color: rgb(0, 0, 0); /* Default color for inactive tabs */
   background-color: transparent; /* Default background color for inactive tabs */
 }
 
 .nav-tabs .nav-link.active {
   color: white; /* Text color for active tab */
-  background-color: black; /* Background color for active tab */
+  background-color: rgb(23, 162, 184); /* Background color for active tab */
 }
 
 .left-panel {
@@ -66,4 +66,12 @@
 
 .custom-container {
   padding: 100;
+}
+
+.proficient-weapon {
+  color: rgb(23, 162, 184); /* Set the color for proficient weapons */
+}
+
+.non-proficient-weapon {
+  color: red; /* Set the color for non-proficient weapons */
 }
