@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Character
+from .models import Character, Weapon, Spell
 
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,3 +56,13 @@ class CharacterSerializer(serializers.ModelSerializer):
             'survival',
             'weapons',
         )
+
+class WeaponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Weapon
+        fields = ('__all__')
+
+class SpellSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Spell
+        fields = ('__all__')

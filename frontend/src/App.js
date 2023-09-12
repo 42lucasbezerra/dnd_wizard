@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import Modal from "./components/Modal";
+import CharacterInfoModal from "./components/CharacterModal";
+import WeaponModal from "./components/WeaponModal";
 import axios from "axios";
 import './App.css';
 
@@ -160,10 +161,12 @@ class App extends Component {
       characterID: 0,
       characterList: {},
       whichView: "skills",
-      modal: false,
+      characterInfoModalOpen: false,
+      weaponModalOpen: false,
       activeItem: "",
       selectedFile: null,
       uploaded: false,
+      weapon: [],
     };
   }
 
@@ -220,7 +223,7 @@ class App extends Component {
   };
 
   toggle = () => {
-    this.setState({ modal: !this.state.modal });
+    this.setState({ characterInfoModalOpen: !this.state.characterInfoModalOpen });
   };
 
   handleSubmit = (item) => {
@@ -238,17 +241,27 @@ class App extends Component {
   };
 
   editItem = (activeItem) => {
-    this.setState({ activeItem: activeItem, modal: true });
+    this.setState({ activeItem: activeItem, characterInfoModalOpen: true });
   };
 
   displayView = (status) => {
     return this.setState({ whichView: status });
   };
 
+  getWeaponByName = (weaponName) => {
+    axios
+      .get("http://localhost:8000/api/weapons/" + String(weaponName) + "/")
+      .then((res) => this.setState({ weapon: res.data }))
+      .catch((err) => console.log(err));
+  };
 
-  renderWeaponInfo = (weapon, extra) => {
-    console.log(`Weapon name is: ${weapon['name']}`);
-    console.log(`Extra info is: ${extra}`)
+  renderWeaponInfo = (weaponName) => {
+    this.getWeaponByName(weaponName);
+    this.setState({weaponModalOpen: true})
+  };
+
+  toggleWeapon = () => {
+    this.setState({ weaponModalOpen: !this.state.weaponModalOpen });
   };
 
   handleRoll = (attribute) => {
@@ -286,10 +299,10 @@ class App extends Component {
       <div className="col-3 mx-auto p-0">
         <h3><center>Ability Scores</center></h3>
         {stats.map(stat => (
-        <div class="card border rounded mb-4" style={{width: '7rem', height: '7.3rem'}}>
-          <div class="card-body">
-            <h5 class="card-title">{mapping[stat]}</h5>
-            <h2 class="card-subtitle mb-2 text-muted">
+        <div className="card border rounded mb-4" style={{width: '7rem', height: '7.3rem'}}>
+          <div className="card-body">
+            <h5 className="card-title">{mapping[stat]}</h5>
+            <h2 className="card-subtitle mb-2 text-muted">
               {((modifier) => (modifier >= 0 ? `+${modifier}` : modifier))(
                 Math.floor((this.state.characterList[stat] - 10) / 2)
               )}&nbsp;
@@ -340,9 +353,8 @@ class App extends Component {
     if (whichView === 'saving_throws' || whichView === 'skills') {
       return (
         <table className="table">
+          <thead><tr><th>Name</th><th>Modifier</th></tr></thead>
         <tbody>
-          <th>Name</th>
-          <th>Modifier</th>
           {attributesToRender.map((attributeTitle) => {
             const attribute = this.state.characterList[attributeTitle];
             return (
@@ -373,11 +385,15 @@ class App extends Component {
   } else if (whichView === 'attacks') {
     return (
       <table className="table">
-      <tbody>
+        <thead>
+          <tr>
         <th>Name</th>
         <th>Atk Bonus</th>
+        <th></th>
+        </tr>
+        </thead>
+      <tbody>
         {attributesToRender.map((weapon_object) => {
-          console.log(weapon_object)
           return (
             <tr key={weapon_object['name']}>
               <td>
@@ -390,7 +406,7 @@ class App extends Component {
                   </span>
                   <span
                     style={{ marginLeft: '5px', cursor: 'pointer' }}
-                    onClick={() => this.renderWeaponInfo(weapon_object, 34)}
+                    onClick={() => this.renderWeaponInfo(weapon_object['name'])}
                   >
                     ℹ️
                   </span>
@@ -421,7 +437,7 @@ charData = () => {
   if (this.state.uploaded && this.state.selectedFile) {
     return (
       <div className="container-fluid">
-        <div class="p-2 mb-3 bg-info text-white mt-3">
+        <div className="p-2 mb-3 bg-info text-white mt-3">
           <div className="container" id="first_scroll">
           {renderCharacterInfo(this.state.characterList)}
         </div>
@@ -432,9 +448,7 @@ charData = () => {
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
               {this.renderTabList()}
-              <ul className="list-group list-group-flush border-top-0">
                 {this.renderItems()}
-              </ul>
             </div>
           </div>
           <div className="col mx-auto p-0">
@@ -442,14 +456,19 @@ charData = () => {
           </div>
         </div>
         </div>
-        {this.state.modal ? (
-          <Modal
+        {this.state.characterInfoModalOpen ? (
+          <CharacterInfoModal
             activeItem={this.state.activeItem}
             Character={this.state.characterList}
             toggle={this.toggle}
             onSave={this.handleSubmit}
           />
         ) : null}
+        <WeaponModal
+          isOpen={this.state.weaponModalOpen}
+          toggle={this.toggleWeapon}
+          weaponInfo={this.state.weapon}
+        />
       </div>
     );
   }
@@ -459,7 +478,7 @@ charData = () => {
   render() {
     return (
       <main><center>
-      <div class="container">
+      <div className="container">
           <h3>
               Upload your character sheet below!
           </h3>

@@ -27,4 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/uploadfile/', views.upload_file, name='uploadfile'),
+    path('api/weapons/<str:weapon_name>/', views.WeaponByName.as_view(), name = 'weapon-by-name'),
+    path('api/spells/<str:spell_name>/', views.SpellByName.as_view(), name = 'spell-by-name'),
 ]

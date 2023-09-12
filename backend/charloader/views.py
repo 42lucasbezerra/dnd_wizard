@@ -6,10 +6,12 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 from rest_framework import viewsets
-from .serializers import CharacterSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import CharacterSerializer, SpellSerializer, WeaponSerializer
 
 from charloader.forms import UploadForm
-from charloader.models import Character
+from charloader.models import Character, Spell, Weapon
 from charloader.functions.functions import handle_uploaded_file, calculate_modifier
 
 import pandas as pd
@@ -65,6 +67,29 @@ def index(request):
 class CharacterView(viewsets.ModelViewSet):
     serializer_class = CharacterSerializer
     queryset = Character.objects.all()
+
+
+class WeaponByName(APIView):
+    def get(self, request, weapon_name):
+        try:
+            weapon = Weapon.objects.get(name = weapon_name)
+            
+            serializer = WeaponSerializer(weapon)
+            return Response(serializer.data)
+        except Weapon.DoesNotExist:
+            return Response({"message": "Weapon not found in the database. Check your spelling?"})
+            
+class SpellByName(APIView):
+    def get(self, request, spell_name):
+        try:
+            spell = Spell.objects.get(spell_name = spell_name)
+            
+            serializer = SpellSerializer(spell)
+            return Response(serializer.data)
+        except Spell.DoesNotExist:
+            return Response({"message": "Spell not found in the database. Check your spelling?"})
+
+
 
 
 @csrf_exempt
