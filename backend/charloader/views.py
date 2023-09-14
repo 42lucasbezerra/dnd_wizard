@@ -72,7 +72,7 @@ class CharacterView(viewsets.ModelViewSet):
 class WeaponByName(APIView):
     def get(self, request, weapon_name):
         try:
-            weapon = Weapon.objects.get(name = weapon_name)
+            weapon = Weapon.objects.filter(name__iexact = weapon_name).first()
             
             serializer = WeaponSerializer(weapon)
             return Response(serializer.data)

@@ -85,6 +85,10 @@ class Character(models.Model):
     stealth = models.IntegerField(default=0, verbose_name = 'Stealth Modifier', blank = True, null = True)
     survival = models.IntegerField(default=0, verbose_name = 'Survival Modifier', blank = True, null = True)
 
+    # Spellcasting
+    spell_save_dc = models.IntegerField(default=10, verbose_name = 'Spell Save DC', blank = True, null = True)
+    spell_attack_bonus = models.IntegerField(default=0, verbose_name = 'Spell Attack Bonus Modifier', blank = True, null = True)
+
     # Attacks
     weapons = models.JSONField(blank = True, null=True)
     spells = models.JSONField(blank = True, null=True)

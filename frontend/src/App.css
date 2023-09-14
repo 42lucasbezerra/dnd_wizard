@@ -48,6 +48,11 @@
   background-color: rgb(23, 162, 184); /* Background color for active tab */
 }
 
+.nav-tabs .nav-link.spell {
+  color: white; /* Text color for active tab */
+  background-color: rgb(24, 23, 24); /* Background color for active tab */
+}
+
 .left-panel {
   width: 300px; /* Adjust width as needed */
   background-color: #6b6b6b; /* Set background color */
@@ -56,12 +61,16 @@
 }
 
 .card {
-  margin: 0; /* Remove any margin */
+  margin: 1; /* Remove any margin */
 }
 
 .card-body {
-  padding: 0rem; /* Add padding as needed to reduce whitespace */
+  padding: 1rem; /* Add padding as needed to reduce whitespace */
   margin: 0; /* Remove any margin */
+}
+
+.card-round{
+  padding: 0.25rem;
 }
 
 .custom-container {

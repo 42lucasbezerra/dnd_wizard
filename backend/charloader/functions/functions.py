@@ -71,6 +71,8 @@ def handle_uploaded_file(f):
         'weapons': weapons
     }
 
+    df2 = pd.read_excel(f, header=None, sheet_name='Stats and Profs.', engine='openpyxl')
+
     return char_info
 
 def calculate_modifier(score):

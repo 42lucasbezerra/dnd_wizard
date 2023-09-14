@@ -1,66 +1,19 @@
 import React, { Component } from "react";
 import CharacterInfoModal from "./components/CharacterModal";
 import WeaponModal from "./components/WeaponModal";
+import SpellModal from "./components/SpellModal";
 import axios from "axios";
 import './App.css';
+
+import { capitalizeFirstLetter } from "./components/utils";
 
 /* Option for d20 button, potentially!
 <a href={process.env.PUBLIC_URL + '/dice-d20.svg'} target="_blank" rel="noopener noreferrer" className="d20-button">
   <span role="img" aria-label="d20">🎲</span>
 </a> 
+*/
 
-const Character = 
-  {
-    name: 'Sing Medaru',
-    character_class: 'Barbarian',
-    background: 'Criminal',
-    player_name: 'Lucas',
-    race: 'Human',
-    alignment: 'Good',
-    hit_dice_total: '9d8',
-    hit_dice: '9d8',
-    armor_class: 17,
-    initiative: 5,
-    inspiration: 1,
-    proficiency: 4,
-    speed: 30,
-    level: 9,
-    experience_points: 899,
-    total_hit_points: 80,
-    current_hit_points: 80,
-    temporary_hit_points: 0,
-    strength: 10,
-    dexterity: 10,
-    constitution: 10,
-    intelligence: 10,
-    wisdom: 10,
-    charisma: 12,
-    saving_throw_strength: 2,
-    saving_throw_dexterity: 3,
-    saving_throw_constitution: 4,
-    saving_throw_intelligence: 5,
-    saving_throw_wisdom: 3,
-    saving_throw_charisma: 2,
-    acrobatics: 1,
-    animal_handling: 2,
-    arcana: 3,
-    athletics: 4,
-    deception: 5,
-    history: 4,
-    insight: 3,
-    intimidation: 6,
-    investigation: 7,
-    medicine: 9,
-    nature: 1,
-    perception: 1,
-    performance: 2,
-    persuasion: 6,
-    religion: 4,
-    sleight_of_hand: 4,
-    stealth: 4,
-    survival: 0,
-  }*/
-
+// -------------- Arrays to help segment information -------------- //
 const info = [
   'character_class',
   'background',
@@ -112,22 +65,10 @@ const skills = [
   'survival',
 ]
 
-const attacks = [
-  'name',
-  'proficiency',
-  'atk_bonus',
-]
+// ---------------------------------------------------------------------- //
 
-// Helper function to capitalize the first letter of a string
-function capitalizeFirstLetter(string) {
-  const words = string.split(" ");
 
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-  }
-  return words.join(" ");
-}
-
+// -------------- Render Character General Info at the Top -------------- //
 function renderCharacterInfo(character) {
   return (
     <div>
@@ -153,6 +94,7 @@ function renderCharacterInfo(character) {
     </div>
   );
 }
+// ---------------------------------------------------------------------- //
 
 class App extends Component {
   constructor(props) {
@@ -163,13 +105,34 @@ class App extends Component {
       whichView: "skills",
       characterInfoModalOpen: false,
       weaponModalOpen: false,
+      spellModalOpen: false,
       activeItem: "",
       selectedFile: null,
       uploaded: false,
       weapon: [],
+      spell: [],
+      spellLevel: 'Cantrips',
     };
   }
 
+  // --------------Download the character sheet template-------------- //
+  downloadFile = () => {
+    // using Java Script method to get PDF file
+    fetch('dnd-character-sheet.xlsx').then(response => {
+        response.blob().then(blob => {
+            // Creating new object of PDF file
+            const fileURL = window.URL.createObjectURL(blob);
+            // Setting various property values
+            let alink = document.createElement('a');
+            alink.href = fileURL;
+            alink.download = 'dnd-character-sheet.xlsx';
+            alink.click();
+        })
+    })
+  }
+  // -------------------------------------------------------- //
+
+  // -------------- Functions to operate character Modal -------------- //
   onFileChange = event => {
     this.setState({ selectedFile: event.target.files[0], uploaded: false });
   }
@@ -243,11 +206,20 @@ class App extends Component {
   editItem = (activeItem) => {
     this.setState({ activeItem: activeItem, characterInfoModalOpen: true });
   };
+  // ---------------------------------------------------------------------- //
+
+  // ---------------------------- Functions to switch tabs ---------------------------- //
 
   displayView = (status) => {
     return this.setState({ whichView: status });
   };
 
+  spellView = (status) => {
+    return this.setState({ spellLevel: status });
+  };
+  // ---------------------------------------------------------------------- //
+
+  // ---------------------------- Weapon Information Functions ---------------------------- //
   getWeaponByName = (weaponName) => {
     axios
       .get("http://localhost:8000/api/weapons/" + String(weaponName) + "/")
@@ -257,13 +229,34 @@ class App extends Component {
 
   renderWeaponInfo = (weaponName) => {
     this.getWeaponByName(weaponName);
-    this.setState({weaponModalOpen: true})
+    this.setState({weaponModalOpen: true});
   };
 
   toggleWeapon = () => {
     this.setState({ weaponModalOpen: !this.state.weaponModalOpen });
   };
+  // ---------------------------------------------------------------------- //
 
+
+  // ---------------------------- Spell Information Functions ---------------------------- //
+  getSpellByName = (spellName) => {
+    axios
+      .get("http://localhost:8000/api/spells/" + String(spellName) + "/")
+      .then((res) => this.setState({ spell: res.data }))
+      .catch((err) => console.log(err));
+  }
+
+  renderSpellInfo = (spellName) => {
+    this.getSpellByName(spellName);
+    this.setState({spellModalOpen: true});
+  }
+
+  toggleSpell = () => {
+    this.setState({ spellModalOpen: !this.state.spellModalOpen });
+  }
+  // ---------------------------------------------------------------------- //
+
+  // ---------------------------- Dice Rolling ---------------------------- //
   handleRoll = (attribute) => {
     // Simulate rolling a 20-sided die (d20)
     const d20Roll = Math.floor(Math.random() * 20) + 1;
@@ -274,9 +267,11 @@ class App extends Component {
     // Display the result or perform any other actions you need
     alert(`You rolled a d20: ${d20Roll}\nModifier: ${attribute}\nTotal: ${total}`);
   };
+  // ---------------------------------------------------------------------- //
 
 
-  renderStats = () => {
+  // ---------------------------- Display Character Ability Scores ---------------------------- //
+  renderAbility = () => {
     const mapping = {
       strength: 'STR',
       dexterity: 'DEX',
@@ -299,7 +294,7 @@ class App extends Component {
       <div className="col-3 mx-auto p-0">
         <h3><center>Ability Scores</center></h3>
         {stats.map(stat => (
-        <div className="card border rounded mb-4" style={{width: '7rem', height: '7.3rem'}}>
+        <div className="card border rounded mb-4" style={{width: '7rem', height: '7.1rem'}}>
           <div className="card-body">
             <h5 className="card-title">{mapping[stat]}</h5>
             <h2 className="card-subtitle mb-2 text-muted">
@@ -308,8 +303,8 @@ class App extends Component {
               )}&nbsp;
             </h2>
             <div className="card border rounded-circle" style={{ width: '2.5rem', height: '2.3rem' }} key={stat}>
-              <div className="card-body d-flex flex-column justify-content-center align-items-center text-center">
-                <h6>{this.state.characterList[stat]}</h6>
+              <div className="card-round d-flex flex-column justify-content-center align-items-center text-center">
+                <p>{this.state.characterList[stat]}</p>
               </div>
             </div>
           </div>
@@ -317,8 +312,10 @@ class App extends Component {
       </div>
     );
   };
+  // ------------------------------------------------------------------------------------ //
 
 
+  // ---------------------------- Create tabs for different information ---------------------------- //
   renderTabList = () => {
     const tabs = ['skills', 'saving_throws', 'spells', 'attacks'];
   
@@ -336,7 +333,50 @@ class App extends Component {
       </div>
     );
   };
+  // ------------------------------------------------------------------------------------ //
 
+  // ---------------------------- Render Spell Information ---------------------------- //
+  renderSpellTabs = () => {
+    const spell_tabs = [
+      'Cantrips',
+      'Level 1',
+      'Level 2',
+      'Level 3',
+      'Level 4',
+      'Level 5',
+      'Level 6',
+      'Level 7',
+      'Level 8',
+      'Level 9',
+    ];
+
+    return (
+      <div className="nav nav-tabs">
+        {spell_tabs.map(tab => (
+          <span
+            key={tab}
+            className={this.state.spellLevel === tab ? "nav-link spell" : "nav-link"}
+            onClick={() => this.spellView(tab)}
+          >
+            {tab}
+          </span>
+        ))}
+      </div>
+    );
+  }; 
+  
+  renderSpellItems = () => {
+    const { spellLevel } = this.state;
+    console.log(spellLevel);
+
+    return(
+      <div>
+        <h6>{spellLevel}{spellLevel === "Cantrips" ? "" : " spells"}</h6>
+      </div>
+    );
+  }
+
+  // ---------------------------- Render Items in each specific tab ---------------------------- //
   renderItems = () => {
     const { whichView } = this.state;
 
@@ -402,7 +442,7 @@ class App extends Component {
                     className={weapon_object['proficiency'] ? 'proficient-weapon' : 'non-proficient-weapon'}
                     title={weapon_object['proficiency'] ? 'Proficient' : 'Not Proficient'}
                   >
-                    {weapon_object['name']}
+                    {capitalizeFirstLetter(weapon_object['name'])}
                   </span>
                   <span
                     style={{ marginLeft: '5px', cursor: 'pointer' }}
@@ -414,7 +454,7 @@ class App extends Component {
               </td>
               <td className="d-flex flex-column">
                 <span>
-                  <center>{weapon_object['atk_bonus'] >= 0 ? "+" : ""}{weapon_object['atk_bonus']}</center>
+                  <center>{weapon_object['atk_bonus'] !== null ? (weapon_object['atk_bonus'] > 0 ? "+" : "") : "?"}{weapon_object['atk_bonus']}</center>
                 </span>
               </td>
               <td>
@@ -430,9 +470,19 @@ class App extends Component {
       </tbody>
     </table>
   );
+  } else if (whichView === 'spells') {
+    return(
+      <div>
+      {this.renderSpellTabs()}
+      {this.renderSpellItems()}
+      </div>
+    );
   }
 };
+// ------------------------------------------------------------------------------------ //
 
+
+// -------------- Display character Information if file is uploaded -------------- //
 charData = () => {
   if (this.state.uploaded && this.state.selectedFile) {
     return (
@@ -444,7 +494,7 @@ charData = () => {
         </div>
         <div className="container">
         <div className="row">
-          {this.renderStats()}
+          {this.renderAbility()}
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
               {this.renderTabList()}
@@ -473,8 +523,10 @@ charData = () => {
     );
   }
 };
+// ---------------------------------------------------------------------- //
 
 
+  // ---------------------------- Render ---------------------------- //
   render() {
     return (
       <main><center>
@@ -488,6 +540,19 @@ charData = () => {
               <button onClick={this.onFileUpload}>
                   Upload!
               </button>
+          </div> <br />
+          <div>
+          <h5>Or download the character sheet template:</h5>
+            <button type="button" class="btn btn-success" onClick={this.downloadFile}><svg xmlns="http://www.w3.org/2000/svg" width="16" 
+                  height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                  ::before
+                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 
+                  0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
+                  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 
+                  0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"></path>
+              </svg>
+              &nbsp;Lightweight character sheet 5e
+            </button>
           </div>
         </div>
           {this.charData()}
@@ -496,6 +561,60 @@ charData = () => {
   );
   };
 }
+// ---------------------------------------------------------------------- //
 
 
 export default App;
+
+/* // If a character is needed for testing:
+const Character = 
+  {
+    name: 'Sing Medaru',
+    character_class: 'Barbarian',
+    background: 'Criminal',
+    player_name: 'Lucas',
+    race: 'Human',
+    alignment: 'Good',
+    hit_dice_total: '9d8',
+    hit_dice: '9d8',
+    armor_class: 17,
+    initiative: 5,
+    inspiration: 1,
+    proficiency: 4,
+    speed: 30,
+    level: 9,
+    experience_points: 899,
+    total_hit_points: 80,
+    current_hit_points: 80,
+    temporary_hit_points: 0,
+    strength: 10,
+    dexterity: 10,
+    constitution: 10,
+    intelligence: 10,
+    wisdom: 10,
+    charisma: 12,
+    saving_throw_strength: 2,
+    saving_throw_dexterity: 3,
+    saving_throw_constitution: 4,
+    saving_throw_intelligence: 5,
+    saving_throw_wisdom: 3,
+    saving_throw_charisma: 2,
+    acrobatics: 1,
+    animal_handling: 2,
+    arcana: 3,
+    athletics: 4,
+    deception: 5,
+    history: 4,
+    insight: 3,
+    intimidation: 6,
+    investigation: 7,
+    medicine: 9,
+    nature: 1,
+    perception: 1,
+    performance: 2,
+    persuasion: 6,
+    religion: 4,
+    sleight_of_hand: 4,
+    stealth: 4,
+    survival: 0,
+  }*/
