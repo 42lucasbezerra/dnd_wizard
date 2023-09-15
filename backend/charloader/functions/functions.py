@@ -19,6 +19,55 @@ def handle_uploaded_file(f):
                     "extra": df[11][25+i],
                 }
             )
+    
+    df2 = pd.read_excel(f, header=None, sheet_name='Spellcasting', engine='openpyxl')
+
+    spellcasting_ability = df2[7][6]
+    spell_save_dc = df2[11][6]
+    spell_attack_bonus = df2[15][6]
+
+    spell_locations = {
+    'Cantrips': [],
+    'Level 1': [],
+    'Level 2': [],
+    'Level 3': [],
+    'Level 4': [],
+    'Level 5': [],
+    'Level 6': [],
+    'Level 7': [],
+    'Level 8': [],
+    'Level 9': [],
+    }
+    spells = {
+        'Cantrips': [],
+        'Level 1': [],
+        'Level 2': [],
+        'Level 3': [],
+        'Level 4': [],
+        'Level 5': [],
+        'Level 6': [],
+        'Level 7': [],
+        'Level 8': [],
+        'Level 9': [],
+    }
+
+    for k in range(14):
+        spell_locations['Cantrips'].append((1,13+k))
+        spell_locations['Level 1'].append((2,30+k))
+        spell_locations['Level 2'].append((8,13+k))
+        spell_locations['Level 3'].append((8,30+k))
+        spell_locations['Level 4'].append((14,13+k))
+        spell_locations['Level 5'].append((14,30+k))
+        spell_locations['Level 6'].append((20,13+k))
+        spell_locations['Level 7'].append((20,30+k))
+        spell_locations['Level 8'].append((26,13+k))
+        spell_locations['Level 9'].append((26,30+k))
+
+    for key, val in spell_locations.items():
+        for tup in val:
+            value = df2[tup[0]][tup[1]]
+            if pd.notna(value):
+                spells[key].append(value)
 
     char_info = {
         'name': df[1][1],
@@ -68,12 +117,13 @@ def handle_uploaded_file(f):
         'sleight_of_hand': df[4][33],
         'stealth': df[4][34],
         'survival': df[4][35],
-        'weapons': weapons
+        'weapons': weapons,
+        'spell_save_dc': spell_save_dc,
+        'spellcasting_ability': spellcasting_ability,
+        'spell_attack_bonus': spell_attack_bonus,
     }
 
-    df2 = pd.read_excel(f, header=None, sheet_name='Stats and Profs.', engine='openpyxl')
-
-    return char_info
+    return char_info, spells
 
 def calculate_modifier(score):
     modifier = int((score - 10)/2)

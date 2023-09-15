@@ -55,6 +55,7 @@ class CharacterSerializer(serializers.ModelSerializer):
             'stealth',
             'survival',
             'weapons',
+            'spells',
         )
 
 class WeaponSerializer(serializers.ModelSerializer):

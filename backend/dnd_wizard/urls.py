@@ -29,4 +29,5 @@ urlpatterns = [
     path('api/uploadfile/', views.upload_file, name='uploadfile'),
     path('api/weapons/<str:weapon_name>/', views.WeaponByName.as_view(), name = 'weapon-by-name'),
     path('api/spells/<str:spell_name>/', views.SpellByName.as_view(), name = 'spell-by-name'),
+    path('api/get_spell_list/', views.get_spell_list, name = 'get_spell_list'),
 ]

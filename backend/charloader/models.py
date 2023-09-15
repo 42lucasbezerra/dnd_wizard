@@ -1,5 +1,22 @@
 from django.db import models
 
+class Spell(models.Model):
+    """
+    5e spell information
+    """
+    spell_id = models.IntegerField(primary_key=True)
+    spell_name = models.CharField(max_length = 50)
+    spell_level = models.IntegerField(default = 0, null = True, blank = True)
+    spell_type = models.CharField(max_length = 50, blank = True, null = True)
+    casting_time = models.CharField(max_length = 50, blank = True, null = True)
+    spell_range = models.CharField(max_length = 50, blank = True, null = True)
+    components = models.TextField(null = True, blank = True)
+    duration = models.CharField(max_length = 50, blank = True, null = True)
+    notes = models.TextField(null = True, blank = True)
+    higher_levels = models.TextField(null = True, blank = True)
+
+    def __str__(self):
+        return self.spell_name.capitalize()
 
 class Character(models.Model):
     """
@@ -86,12 +103,13 @@ class Character(models.Model):
     survival = models.IntegerField(default=0, verbose_name = 'Survival Modifier', blank = True, null = True)
 
     # Spellcasting
+    spellcasting_ability = models.CharField(max_length=20, verbose_name = 'Spellcasting Ability', blank = True, null = True)
     spell_save_dc = models.IntegerField(default=10, verbose_name = 'Spell Save DC', blank = True, null = True)
     spell_attack_bonus = models.IntegerField(default=0, verbose_name = 'Spell Attack Bonus Modifier', blank = True, null = True)
 
     # Attacks
     weapons = models.JSONField(blank = True, null=True)
-    spells = models.JSONField(blank = True, null=True)
+    spells = models.ManyToManyField(Spell, blank = True)
 
     
     def __str__(self):
@@ -99,24 +117,6 @@ class Character(models.Model):
 
     #class Meta:
     #    constraints =  [models.UniqueConstraint(fields=["name", "character_class", "race", "player_name"], name ='unique_character')]
-
-class Spell(models.Model):
-    """
-    5e spell information
-    """
-    spell_id = models.IntegerField(primary_key=True)
-    spell_name = models.CharField(max_length = 50)
-    spell_level = models.IntegerField(default = 0, null = True, blank = True)
-    spell_type = models.CharField(max_length = 50, blank = True, null = True)
-    casting_time = models.CharField(max_length = 50, blank = True, null = True)
-    spell_range = models.CharField(max_length = 50, blank = True, null = True)
-    components = models.TextField(null = True, blank = True)
-    duration = models.CharField(max_length = 50, blank = True, null = True)
-    notes = models.TextField(null = True, blank = True)
-    higher_levels = models.TextField(null = True, blank = True)
-
-    def __str__(self):
-        return self.spell_name.capitalize()
     
 
 class Weapon(models.Model):

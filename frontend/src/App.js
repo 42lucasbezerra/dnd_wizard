@@ -33,6 +33,9 @@ const stats_2 = [
   'total_hit_points',
   'current_hit_points',
   'temporary_hit_points',
+  'spell_save_dc',
+  'spellcasting_ability',
+  'spell_attack_bonus',
 ]
 
 const saving_throws = [
@@ -102,6 +105,7 @@ class App extends Component {
     this.state = {
       characterID: 0,
       characterList: {},
+      spellList: [],
       whichView: "skills",
       characterInfoModalOpen: false,
       weaponModalOpen: false,
@@ -113,6 +117,18 @@ class App extends Component {
       spell: [],
       spellLevel: 'Cantrips',
     };
+  }
+
+  componentDidMount() {
+    // Fetch spell list from the backend API
+    fetch('http://127.0.0.1:8000/api/get_spell_list/') // Replace with your actual API endpoint
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ spellList: data.spells });
+      })
+      .catch(error => {
+        console.error('Error fetching spell list:', error);
+      });
   }
 
   // --------------Download the character sheet template-------------- //
@@ -239,15 +255,13 @@ class App extends Component {
 
 
   // ---------------------------- Spell Information Functions ---------------------------- //
-  getSpellByName = (spellName) => {
-    axios
-      .get("http://localhost:8000/api/spells/" + String(spellName) + "/")
-      .then((res) => this.setState({ spell: res.data }))
-      .catch((err) => console.log(err));
+  getSpellById = (spellId) => {
+    const { spellList } = this.state;
+    return spellList.find(spell => spell.spell_id === spellId);
   }
 
   renderSpellInfo = (spellName) => {
-    this.getSpellByName(spellName);
+    // TODO -> edit this.getSpellByName(spellName);
     this.setState({spellModalOpen: true});
   }
 
@@ -366,12 +380,53 @@ class App extends Component {
   }; 
   
   renderSpellItems = () => {
-    const { spellLevel } = this.state;
-    console.log(spellLevel);
+    const { spellLevel, spellList } = this.state;
+    
+    // Filter the spell list by the selected spell level
+    const spellLevelMap = {
+      'Cantrips': 0,
+      'Level 1': 1,
+      'Level 2': 2,
+      'Level 3': 3,
+      'Level 4': 4,
+      'Level 5': 5,
+      'Level 6': 6,
+      'Level 7': 7,
+      'Level 8': 8,
+      'Level 9': 9,
+    };
+    
+    const spellsToRender = spellList.filter(spell => {
+      return spellLevelMap[spellLevel] === spell.spell_level && this.state.characterList['spells'].includes(spell.spell_id);
+    });
+    
 
-    return(
+    console.log(spellsToRender);
+      
+    return (
       <div>
-        <h6>{spellLevel}{spellLevel === "Cantrips" ? "" : " spells"}</h6>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Casting Time</th>
+              <th>Range</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {spellsToRender.map(spell => (
+              <tr key={spell.spell_id}>
+                <td>
+                  <span>{spell.spell_name}</span>
+                </td>
+                <td>{spell.casting_time}</td>
+                <td>{spell.spell_range}</td>
+                <td>{spell.duration}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }

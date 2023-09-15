@@ -99,7 +99,7 @@ def upload_file(request):
         user_form = UploadForm(request.POST, request.FILES)
         print(request.FILES['myFile'])
         # Parse information from character sheet
-        char_info =  handle_uploaded_file(request.FILES['myFile'])
+        char_info, spells =  handle_uploaded_file(request.FILES['myFile'])
 
         # Delete character if it already exists
         if Character.objects.filter(name = char_info["name"]).exists():
@@ -118,17 +118,35 @@ def upload_file(request):
 
         # Populate the character information (skip fieldnames[0] because it is 'id')
         for key in fieldnames[1:]:
-            operation = f"{prefix}{key} = char_info[key]"
-            try:
-                exec(operation)
-            except:
-                exec(f"char.{key} = None")
+            if key != 'spells':
+                operation = f"{prefix}{key} = char_info[key]"
+                try:
+                    exec(operation)
+                except:
+                    exec(f"char.{key} = None")
         
         # To save the character in the database uncomment below:
         char.save()
+        
+        spell_list = []
+
+        for key, spell_level in spells.items():
+            for spell_name in spell_level:
+                try:
+                    spell = Spell.objects.get(spell_name__icontains=spell_name)
+                    spell_list.append(spell)
+                except Spell.DoesNotExist:
+                    pass
+
+        char.spells.set(spell_list)
 
         # Return the created object's data in the response
-        return JsonResponse({'id': char.id})
+        return JsonResponse({'id': char.id, 'spells': spells})
     else:
         print('error 2')
         return JsonResponse({'error': 'File upload failed'}, status=400)
+    
+
+def get_spell_list(request):
+    spells = Spell.objects.all().values()
+    return JsonResponse({'spells': list(spells)})
