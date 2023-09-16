@@ -6,11 +6,29 @@
 }
 
 .weapon-header {
-    background-color: rgb(72, 59, 0);
+    background-color: rgb(72, 52, 0);
+    color: rgba(255, 255, 255, 0.866);
+}
+
+.spell-header {
+    background-image: url('./space.jpg');
+    color: rgba(255, 255, 255, 0.951);
+    text-align: center;
+}
+
+.spell-modal {
+    background-color: rgb(34, 5, 37);
     color: rgba(255, 255, 255, 0.74);
 }
 
 .property-link {
     cursor: pointer; /* Change the cursor to a pointer when hovering */
-    color: rgb(0, 0, 0); /* Change the text color to blue to make it look like a link */
+    color: rgb(95, 57, 0); /* Change the text color to blue to make it look like a link */
+    font-weight: bold;
   }
+
+.component-link {
+    cursor: pointer; /* Change the cursor to a pointer when hovering */
+    color: rgb(7, 142, 179); /* Change the text color to blue to make it look like a link */
+    font-weight: bold;
+}

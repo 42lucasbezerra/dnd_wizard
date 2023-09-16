@@ -77,7 +77,7 @@ export default class WeaponInfoModal extends Component {
         return (
         <div>
         <Modal isOpen={isOpen} toggle={toggle} className="modal-sm" onClosed={this.handleClosed}>
-            <ModalHeader toggle={toggle} className="weapon-header">{weaponInfo.name}</ModalHeader>
+            <ModalHeader className="weapon-header">{weaponInfo.name}</ModalHeader>
             <ModalBody className="weapon-modal">
             <p><i>{weaponInfo.weapon_type} weapon</i><br />
             <b>Range:</b> {weaponInfo.range === "0" ? "Melee" : weaponInfo.range}<br />
@@ -100,7 +100,7 @@ export default class WeaponInfoModal extends Component {
             <b>Cost:</b> {weaponInfo.cost}</p>
             {this.renderPropertyPopup()}
             </ModalBody>
-            <ModalFooter className="weapon-modal">
+            <ModalFooter className="weapon-header">
             <Button color="secondary" onClick={toggle}>
                 Close
             </Button>

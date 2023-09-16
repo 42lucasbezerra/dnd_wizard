@@ -133,7 +133,8 @@ def upload_file(request):
         for key, spell_level in spells.items():
             for spell_name in spell_level:
                 try:
-                    spell = Spell.objects.get(spell_name__icontains=spell_name)
+                    spell = Spell.objects.get(spell_name__iexact=spell_name)
+                    print(spell)
                     spell_list.append(spell)
                 except Spell.DoesNotExist:
                     pass

@@ -124,7 +124,7 @@ class App extends Component {
     fetch('http://127.0.0.1:8000/api/get_spell_list/') // Replace with your actual API endpoint
       .then(response => response.json())
       .then(data => {
-        this.setState({ spellList: data.spells });
+        this.setState({ spellList: data.spells , spell: data.spells[0]});
       })
       .catch(error => {
         console.error('Error fetching spell list:', error);
@@ -260,9 +260,9 @@ class App extends Component {
     return spellList.find(spell => spell.spell_id === spellId);
   }
 
-  renderSpellInfo = (spellName) => {
+  renderSpellInfo = (spell) => {
     // TODO -> edit this.getSpellByName(spellName);
-    this.setState({spellModalOpen: true});
+    this.setState({spellModalOpen: true, spell: spell});
   }
 
   toggleSpell = () => {
@@ -399,10 +399,7 @@ class App extends Component {
     const spellsToRender = spellList.filter(spell => {
       return spellLevelMap[spellLevel] === spell.spell_level && this.state.characterList['spells'].includes(spell.spell_id);
     });
-    
-
-    console.log(spellsToRender);
-      
+          
     return (
       <div>
         <table className="table">
@@ -419,6 +416,12 @@ class App extends Component {
               <tr key={spell.spell_id}>
                 <td>
                   <span>{spell.spell_name}</span>
+                  <span
+                    style={{ marginLeft: '5px', cursor: 'pointer' }}
+                    onClick={() => this.renderSpellInfo(spell)}
+                  >
+                    ℹ️
+                  </span>
                 </td>
                 <td>{spell.casting_time}</td>
                 <td>{spell.spell_range}</td>
@@ -573,6 +576,11 @@ charData = () => {
           isOpen={this.state.weaponModalOpen}
           toggle={this.toggleWeapon}
           weaponInfo={this.state.weapon}
+        />
+        <SpellModal
+          isOpen={this.state.spellModalOpen}
+          toggle={this.toggleSpell}
+          spellInfo={this.state.spell}
         />
       </div>
     );
