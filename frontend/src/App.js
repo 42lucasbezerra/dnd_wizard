@@ -119,6 +119,13 @@ class App extends Component {
     };
   }
 
+  getWeaponByName = (weaponName) => {
+    axios
+      .get("http://localhost:8000/api/weapons/" + String(weaponName) + "/")
+      .then((res) => this.setState({ weapon: res.data }))
+      .catch((err) => console.log(err));
+  };
+
   componentDidMount() {
     // Fetch spell list from the backend API
     fetch('http://127.0.0.1:8000/api/get_spell_list/') // Replace with your actual API endpoint
@@ -129,6 +136,9 @@ class App extends Component {
       .catch(error => {
         console.error('Error fetching spell list:', error);
       });
+
+      // Initializes this.state.weapon to avoid WeaponModal issues
+      this.getWeaponByName("Club");
   }
 
   // --------------Download the character sheet template-------------- //
@@ -236,13 +246,6 @@ class App extends Component {
   // ---------------------------------------------------------------------- //
 
   // ---------------------------- Weapon Information Functions ---------------------------- //
-  getWeaponByName = (weaponName) => {
-    axios
-      .get("http://localhost:8000/api/weapons/" + String(weaponName) + "/")
-      .then((res) => this.setState({ weapon: res.data }))
-      .catch((err) => console.log(err));
-  };
-
   renderWeaponInfo = (weaponName) => {
     this.getWeaponByName(weaponName);
     this.setState({weaponModalOpen: true});

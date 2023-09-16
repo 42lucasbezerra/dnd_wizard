@@ -34,8 +34,9 @@ const property_descriptions = {
     special: "A weapon with the special property has unusual rules governing its use, explained in the weapons description.",
     thrown: "If a weapon has the thrown property, you can throw the weapon to make a ranged attack. If the weapon is a melee weapon, you use the same ability modifier for that attack roll and damage roll that you would use for a melee attack with the weapon. For example, if you throw a handaxe, you use your Strength, but if you throw a dagger, you can use either your Strength or your Dexterity, since the dagger has the finesse property.",
     two_handed: "This weapon requires two hands when you attack with it.",
-    versatile: "This weapon can be used with one or two hands. A damage value in parentheses appears with the property—the damage when the weapon is used with two hands to make a melee attack.",
+    versatile: "This weapon can be used with one or two hands. The damage when the weapon is wielded with one hand is shown as the first value in the damage attribute; the two-handed damage is included in parentheses. For example, 1d6 (1d8) means a one-handed attack deals 1d6 damage if it hits, while a two-handed attack deals 1d8 damage if it hits.",
     monk: "Monk weapon.",
+    range: "A weapon that can be used to make a ranged attack has two values displayed with a slash in between them. The first is the weapon’s normal range in feet, and the second indicates the weapon’s long range. When attacking a target beyond normal range, you have disadvantage on the attack roll. You can’t attack a target beyond the weapon’s long range.",
 }
 
 export default class WeaponInfoModal extends Component {
@@ -70,17 +71,30 @@ export default class WeaponInfoModal extends Component {
           </div>
         );
       }
-
+    
     render() {
         const { isOpen, toggle, weaponInfo } = this.props;
-
+        if (weaponInfo) {
         return (
         <div>
-        <Modal isOpen={isOpen} toggle={toggle} className="modal-sm" onClosed={this.handleClosed}>
-            <ModalHeader className="weapon-header">{weaponInfo.name}</ModalHeader>
+        <Modal isOpen={isOpen} toggle={toggle} onClosed={this.handleClosed}>
+            <ModalHeader className="weapon-header"><h4>{weaponInfo.name}</h4></ModalHeader>
             <ModalBody className="weapon-modal">
             <p><i>{weaponInfo.weapon_type} weapon</i><br />
-            <b>Range:</b> {weaponInfo.range === "0" ? "Melee" : weaponInfo.range}<br />
+            <b>Range: </b>
+            {weaponInfo.range === "0" ? (
+                "Melee"
+                ) : weaponInfo.range.includes("/") ? (
+                <span
+                    className="property-link"
+                    onClick={() => this.handlePropertyClick("range")}
+                >
+                    {weaponInfo.range}
+                </span>
+                ) : (
+                    weaponInfo.range
+                )}{" "}
+                <br />
             <b>Damage:</b> {weaponInfo.damage_dice}<br />
             <b>Damage Type:</b> {weaponInfo.damage_type}<br />
             <b>Properties:</b>&nbsp;
@@ -108,5 +122,6 @@ export default class WeaponInfoModal extends Component {
         </Modal>
         </div>
         );
+    }
     }
 }

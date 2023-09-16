@@ -6,8 +6,9 @@
 }
 
 .weapon-header {
-    background-color: rgb(72, 52, 0);
-    color: rgba(255, 255, 255, 0.866);
+    /*background-color: rgb(72, 52, 0);*/
+    background-image: url('./wood.jpg');
+    color: rgb(255, 255, 255);
 }
 
 .spell-header {
