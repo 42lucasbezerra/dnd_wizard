@@ -16,10 +16,16 @@
     text-align: center;
 }
 
-.spell-modal {
-    background-color: rgb(34, 5, 37);
+.spell-modal-dark {
+    background-color: rgb(32, 6, 35);
     color: rgba(255, 255, 255, 0.74);
 }
+
+.spell-modal-light {
+    background-color: rgb(224, 255, 254);
+    color: rgba(0, 0, 0, 0.74);
+}
+
 
 .property-link {
     cursor: pointer; /* Change the cursor to a pointer when hovering */

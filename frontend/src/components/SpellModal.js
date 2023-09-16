@@ -108,7 +108,7 @@ export default class SpellInfoModal extends Component {
           <ModalHeader className="spell-header">
             <h4>{spellInfo.spell_name}</h4>
             </ModalHeader>
-          <ModalBody className="spell-modal">
+          <ModalBody className="spell-modal-dark">
             <div>
             <p><i>{typeParts.map((part, index) => {
               return (
