@@ -6,7 +6,7 @@ import axios from "axios";
 import './App.css';
 import Chat from "./Chatbox";
 
-import { capitalizeFirstLetter } from "./components/utils";
+import { capitalizeFirstLetter, formatSavingThrow } from "./components/utils";
 
 /* Option for d20 button, potentially!
 <a href={process.env.PUBLIC_URL + '/dice-d20.svg'} target="_blank" rel="noopener noreferrer" className="d20-button">
@@ -118,6 +118,8 @@ class App extends Component {
       spell: [],
       spellLevel: 'Cantrips',
       rollString: "",
+      rollButtonClicked: true,
+      rollName: "",
     };
   }
 
@@ -276,7 +278,7 @@ class App extends Component {
   // ---------------------------------------------------------------------- //
 
   // ---------------------------- Dice Rolling ---------------------------- //
-  handleRoll = (attribute) => {
+  handleRoll = (attribute, name) => {
     // Simulate rolling a 20-sided die (d20)
     /*const d20Roll = Math.floor(Math.random() * 20) + 1;
   
@@ -288,8 +290,12 @@ class App extends Component {
     const rollString = `1d20+${attribute}`;
 
     // Pass the rollString to Chat
-    this.setState({rollString});
+    this.setState({rollString, rollButtonClicked: true, rollName: name});
   };
+
+  resetRollButtonClicked = () => {
+    this.setState({ rollButtonClicked: false });
+  }     
   // ---------------------------------------------------------------------- //
 
 
@@ -479,7 +485,7 @@ class App extends Component {
                 <td>
                   <button className="btn btn-secondary mr-2"
                   onClick={() => this.editItem(attributeTitle)}>Edit</button>
-                  <button className="btn btn-primary" onClick={() => this.handleRoll(attribute)}>
+                  <button className="btn btn-primary" onClick={() => this.handleRoll(attribute, formatSavingThrow(attributeTitle))}>
                   Roll
                   </button>
                   </td>
@@ -527,7 +533,7 @@ class App extends Component {
               <td>
                 <button className="btn btn-secondary mr-2"
                 onClick={() => this.editItem(weapon_object)}>Edit</button>
-                <button className="btn btn-primary" onClick={() => this.handleRoll(weapon_object['atk_bonus'])}>
+                <button className="btn btn-primary" onClick={() => this.handleRoll(weapon_object['atk_bonus'], weapon_object['name'])}>
                 Roll
                 </button>
               </td>
@@ -569,9 +575,9 @@ charData = () => {
             </div>
           </div>
           <div className="col mx-auto p-0">
-            <h4>Roll log</h4>
             <div>
-              <Chat rollString={this.state.rollString}/>
+            <h4>Roll log</h4>
+              <Chat rollString={this.state.rollString} rollName={this.state.rollName} rollButtonClicked={this.state.rollButtonClicked} resetRollButtonClicked={this.resetRollButtonClicked}/>
             </div>
           </div>
         </div>

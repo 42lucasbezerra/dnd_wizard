@@ -8,3 +8,11 @@ export function capitalizeFirstLetter(string) {
   return words.join(" ");
 }
 // ---------------------------------------------------------------------- //
+export function formatSavingThrow(attributeTitle) {
+  if (attributeTitle.startsWith('saving_throw_')) {
+    const savingThrow = attributeTitle.replace('saving_throw_', ''); // Remove the prefix
+    return `${capitalizeFirstLetter(savingThrow)} saving throw`;
+  }
+  // Handle other cases if needed
+  return attributeTitle; // Default behavior
+}
