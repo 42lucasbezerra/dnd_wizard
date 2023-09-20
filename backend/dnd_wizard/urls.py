@@ -22,6 +22,7 @@ from charloader import views
 
 router = routers.DefaultRouter()
 router.register(r'characters', views.CharacterView, 'characters')
+router.register(r'abilities', views.AbilityView, 'abilities')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

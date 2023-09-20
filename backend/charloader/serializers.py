@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Character, Weapon, Spell
+from .models import Ability, Character, Weapon, Spell
+
+class AbilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ability
+        fields = ('__all__')
 
 class CharacterSerializer(serializers.ModelSerializer):
     class Meta:

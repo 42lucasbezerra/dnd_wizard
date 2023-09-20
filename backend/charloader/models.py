@@ -145,3 +145,15 @@ class Weapon(models.Model):
 
     def __str__(self):
         return self.name.capitalize()
+    
+
+class Ability(models.Model):
+    name = models.CharField(max_length = 30, verbose_name="Name")
+    description = models.TextField(null = True, blank = True)
+    class_specific = models.JSONField(null = True, blank = True)
+
+    def __str__(self):
+        return self.name.capitalize()
+    
+    class Meta:
+        verbose_name_plural = "Abilities"

@@ -8,10 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import CharacterSerializer, SpellSerializer, WeaponSerializer
+from .serializers import AbilitySerializer, CharacterSerializer, SpellSerializer, WeaponSerializer
 
 from charloader.forms import UploadForm
-from charloader.models import Character, Spell, Weapon
+from charloader.models import Ability, Character, Spell, Weapon
 from charloader.functions.functions import handle_uploaded_file, calculate_modifier
 
 import d20
@@ -65,6 +65,11 @@ def index(request):
 
     return render(request, 'home.html',{'form':user_form})
 
+class AbilityView(viewsets.ModelViewSet):
+    serializer_class = AbilitySerializer
+    queryset = Ability.objects.all()
+
+
 class CharacterView(viewsets.ModelViewSet):
     serializer_class = CharacterSerializer
     queryset = Character.objects.all()
@@ -89,8 +94,6 @@ class SpellByName(APIView):
             return Response(serializer.data)
         except Spell.DoesNotExist:
             return Response({"message": "Spell not found in the database. Check your spelling?"})
-
-
 
 
 @csrf_exempt
@@ -150,6 +153,7 @@ def upload_file(request):
 def get_spell_list(request):
     spells = Spell.objects.all().values()
     return JsonResponse({'spells': list(spells)})
+
 
 def roll_dice(request, expression):
     try:
