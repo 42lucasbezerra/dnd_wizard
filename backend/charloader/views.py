@@ -14,6 +14,7 @@ from charloader.forms import UploadForm
 from charloader.models import Character, Spell, Weapon
 from charloader.functions.functions import handle_uploaded_file, calculate_modifier
 
+import d20
 import pandas as pd
 
 
@@ -134,7 +135,6 @@ def upload_file(request):
             for spell_name in spell_level:
                 try:
                     spell = Spell.objects.get(spell_name__iexact=spell_name)
-                    print(spell)
                     spell_list.append(spell)
                 except Spell.DoesNotExist:
                     pass
@@ -144,10 +144,16 @@ def upload_file(request):
         # Return the created object's data in the response
         return JsonResponse({'id': char.id, 'spells': spells})
     else:
-        print('error 2')
         return JsonResponse({'error': 'File upload failed'}, status=400)
     
 
 def get_spell_list(request):
     spells = Spell.objects.all().values()
     return JsonResponse({'spells': list(spells)})
+
+def roll_dice(request, expression):
+    try:
+        result = d20.roll(expression)
+        return JsonResponse({'result_str': str(result), 'total': result.total, 'crit': result.crit})
+    except Exception as e:
+        return JsonResponse({'error': str(e)})

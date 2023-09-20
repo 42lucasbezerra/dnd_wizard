@@ -4,6 +4,7 @@ import WeaponModal from "./components/WeaponModal";
 import SpellModal from "./components/SpellModal";
 import axios from "axios";
 import './App.css';
+import Chat from "./Chatbox";
 
 import { capitalizeFirstLetter } from "./components/utils";
 
@@ -116,6 +117,7 @@ class App extends Component {
       weapon: [],
       spell: [],
       spellLevel: 'Cantrips',
+      rollString: "",
     };
   }
 
@@ -276,13 +278,17 @@ class App extends Component {
   // ---------------------------- Dice Rolling ---------------------------- //
   handleRoll = (attribute) => {
     // Simulate rolling a 20-sided die (d20)
-    const d20Roll = Math.floor(Math.random() * 20) + 1;
+    /*const d20Roll = Math.floor(Math.random() * 20) + 1;
   
     // Calculate the total by adding the d20 roll and the modifier
     const total = d20Roll + attribute;
   
     // Display the result or perform any other actions you need
-    alert(`You rolled a d20: ${d20Roll}\nModifier: ${attribute}\nTotal: ${total}`);
+    alert(`You rolled a d20: ${d20Roll}\nModifier: ${attribute}\nTotal: ${total}`);*/
+    const rollString = `1d20+${attribute}`;
+
+    // Pass the rollString to Chat
+    this.setState({rollString});
   };
   // ---------------------------------------------------------------------- //
 
@@ -564,6 +570,9 @@ charData = () => {
           </div>
           <div className="col mx-auto p-0">
             <h4>Roll log</h4>
+            <div>
+              <Chat rollString={this.state.rollString}/>
+            </div>
           </div>
         </div>
         </div>

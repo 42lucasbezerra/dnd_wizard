@@ -49,7 +49,7 @@ const property_descriptions = {
     ),
     cantrip: (
       <>
-        <b>Cantrips</b><br /><br />
+        <b>Cantrip</b><br /><br />
         A cantrip is a spell that can be cast at will, without using a spell slot and without being prepared in advance. Repeated practice has fixed the spell in the caster’s mind and infused the caster with the magic needed to produce the effect over and over. A cantrip’s spell level is 0.
       </>
     ),
@@ -71,7 +71,7 @@ const schools_of_magic = new Set([
   "evocation",
   "illusion",
   "necromancy",
-  "transmutation  ",
+  "transmutation",
 ])
 
 
@@ -134,10 +134,10 @@ export default class SpellInfoModal extends Component {
             <p><i>{typeParts.map((part, index) => {
               return (
                 <span key={index}>
-                  {part === '(ritual)' || part === 'cantrip' || schools_of_magic.has(part) ? (
+                  {part === '(ritual)' || part === 'cantrip' || schools_of_magic.has(part.toLowerCase()) ? (
                     <span
                       className="component-link"
-                      onClick={() => this.handlePropertyClick(part)}
+                      onClick={() => this.handlePropertyClick(part.toLowerCase())}
                     >{part}</span>
                   ) : ( part )}
                   {index < typeParts.length - 1 ? ' ' : ''}
