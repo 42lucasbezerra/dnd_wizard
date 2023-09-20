@@ -107,6 +107,7 @@ class App extends Component {
       characterID: 0,
       characterList: {},
       spellList: [],
+      abilityList: [],
       whichView: "skills",
       characterInfoModalOpen: false,
       weaponModalOpen: false,
@@ -132,7 +133,7 @@ class App extends Component {
 
   componentDidMount() {
     // Fetch spell list from the backend API
-    fetch('http://127.0.0.1:8000/api/get_spell_list/') // Replace with your actual API endpoint
+    fetch('http://127.0.0.1:8000/api/get_spell_list/')
       .then(response => response.json())
       .then(data => {
         this.setState({ spellList: data.spells , spell: data.spells[0]});
@@ -141,8 +142,14 @@ class App extends Component {
         console.error('Error fetching spell list:', error);
       });
 
-      // Initializes this.state.weapon to avoid WeaponModal issues
-      this.getWeaponByName("Club");
+    // Get the ability list as well
+    axios
+      .get("http://localhost:8000/api/abilities/")
+      .then((res) => this.setState({ abilityList: res.data }))
+      .catch((err) => console.log(err));
+
+    // Initializes this.state.weapon to avoid WeaponModal issues
+    this.getWeaponByName("Club");
   }
 
   // --------------Download the character sheet template-------------- //
