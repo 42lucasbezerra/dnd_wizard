@@ -32,4 +32,6 @@ urlpatterns = [
     path('api/spells/<str:spell_name>/', views.SpellByName.as_view(), name = 'spell-by-name'),
     path('api/get_spell_list/', views.get_spell_list, name = 'get_spell_list'),
     path('roll-dice/<str:expression>/', views.roll_dice, name='roll-dice'),
+    re_path(r"^$", views.render_react),
+    re_path(r"^(?:.*)/?$", views.render_react),
 ]

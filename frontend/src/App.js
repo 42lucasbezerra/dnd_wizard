@@ -138,7 +138,7 @@ class App extends Component {
 
   componentDidMount() {
     // Fetch spell list from the backend API
-    fetch('http://127.0.0.1:8000/api/get_spell_list/')
+    fetch('http://localhost:8000/api/get_spell_list/')
       .then(response => response.json())
       .then(data => {
         this.setState({ spellList: data.spells , spell: data.spells[0]});
@@ -198,7 +198,7 @@ class App extends Component {
       // Request made to the backend api
       // Send formData object
       try {
-        const response = await axios.post("http://127.0.0.1:8000/api/uploadfile/", formData, {
+        const response = await axios.post("http://localhost:8000/api/uploadfile/", formData, {
             headers: {
                 'content-type': 'multipart/form-data',
             }

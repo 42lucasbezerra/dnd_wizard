@@ -161,3 +161,7 @@ def roll_dice(request, expression):
         return JsonResponse({'result_str': str(result), 'total': result.total, 'crit': result.crit})
     except Exception as e:
         return JsonResponse({'error': str(e)})
+    
+
+def render_react(request):
+    return render(request, "index.html")

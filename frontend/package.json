@@ -20,7 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "bundle": "esbuild app.jsx --bundle --outfile=out.js",
-    "relocate": "react-scripts build && rm -rf ../backend/build && mv -f build ../backend"
+    "relocate": "react-scripts build && rmdir /s /q ..\\backend\\build && move /y build ..\\backend"
   },
   "eslintConfig": {
     "extends": [
