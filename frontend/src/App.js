@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import CharacterInfoModal from "./components/CharacterModal";
 import WeaponModal from "./components/WeaponModal";
 import SpellModal from "./components/SpellModal";
+import RollModal from "./components/RollModal";
+import AttributeModal from "./components/AttributeModal";
 import axios from "axios";
 import './App.css';
 import Chat from "./Chatbox";
@@ -112,6 +114,8 @@ class App extends Component {
       characterInfoModalOpen: false,
       weaponModalOpen: false,
       spellModalOpen: false,
+      rollModalOpen: false,
+      attributeModalOpen: false,
       activeItem: "",
       selectedFile: null,
       uploaded: false,
@@ -121,6 +125,7 @@ class App extends Component {
       rollString: "",
       rollButtonClicked: true,
       rollName: "",
+      attribute: {},
     };
   }
 
@@ -145,7 +150,9 @@ class App extends Component {
     // Get the ability list as well
     axios
       .get("http://localhost:8000/api/abilities/")
-      .then((res) => this.setState({ abilityList: res.data }))
+      .then((res) => {
+        this.setState({ abilityList: res.data, attribute:res.data[0] })
+      })
       .catch((err) => console.log(err));
 
     // Initializes this.state.weapon to avoid WeaponModal issues
@@ -275,7 +282,6 @@ class App extends Component {
   }
 
   renderSpellInfo = (spell) => {
-    // TODO -> edit this.getSpellByName(spellName);
     this.setState({spellModalOpen: true, spell: spell});
   }
 
@@ -302,9 +308,25 @@ class App extends Component {
 
   resetRollButtonClicked = () => {
     this.setState({ rollButtonClicked: false });
-  }     
-  // ---------------------------------------------------------------------- //
+  };     
 
+  renderRollInfo = () => {
+    this.setState({rollModalOpen: true});
+  };
+
+  toggleRoll = () => {
+    this.setState({ rollModalOpen: !this.state.rollModalOpen});
+  };
+  // ---------------------------------------------------------------------- //
+  // ---------------------------- Render Ability/Saving Throw Information ---------------------------- //
+  renderAttributeInfo = (attribute) => {
+    const attr = this.state.abilityList.find((element) => element["name"] === attribute);
+    this.setState({ attributeModalOpen: true, attribute: attr });
+  }
+
+  toggleAttribute = () => {
+    this.setState({ attributeModalOpen: !this.state.attributeModalOpen});
+  }
 
   // ---------------------------- Display Character Ability Scores ---------------------------- //
   renderAbility = () => {
@@ -483,6 +505,12 @@ class App extends Component {
                   <span>
                     {(attributeTitle.replace('saving_throw_','').charAt(0).toUpperCase() + attributeTitle.replace('saving_throw_','').slice(1)).replaceAll('_', ' ')}
                   </span>
+                  <span
+                    style={{ marginLeft: '5px', cursor: 'pointer' }}
+                    onClick={() => this.renderAttributeInfo(capitalizeFirstLetter(attributeTitle).replace(/_/,' '))}
+                  >
+                    ℹ️
+                  </span>
                 </td>
                 <td className="d-flex flex-column">
                   <span>
@@ -582,10 +610,13 @@ charData = () => {
             </div>
           </div>
           <div className="col mx-auto p-0">
-            <div>
-            <h4>Roll log</h4>
-              <Chat rollString={this.state.rollString} rollName={this.state.rollName} rollButtonClicked={this.state.rollButtonClicked} resetRollButtonClicked={this.resetRollButtonClicked}/>
+          <div className="header-container">
+            <h4 className="header-text">Roll log</h4>
+            <div className="circle-button" onClick={() => this.renderRollInfo()}>
+              <span className="question-mark">?</span>
             </div>
+          </div>
+              <Chat rollString={this.state.rollString} rollName={this.state.rollName} rollButtonClicked={this.state.rollButtonClicked} resetRollButtonClicked={this.resetRollButtonClicked}/>
           </div>
         </div>
         </div>
@@ -606,6 +637,15 @@ charData = () => {
           isOpen={this.state.spellModalOpen}
           toggle={this.toggleSpell}
           spellInfo={this.state.spell}
+        />
+        <RollModal
+          isOpen={this.state.rollModalOpen}
+          toggle={this.toggleRoll}
+        />
+        <AttributeModal
+          isOpen={this.state.attributeModalOpen}
+          toggle={this.toggleAttribute}
+          attribute={this.state.attribute}
         />
       </div>
     );

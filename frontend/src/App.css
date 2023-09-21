@@ -84,3 +84,32 @@
 .non-proficient-weapon {
   color: red; /* Set the color for non-proficient weapons */
 }
+
+.header-container {
+  display: flex;
+  align-items: center; /* Vertically center-align the content */
+  justify-content: center;
+
+}
+
+.header-text {
+  font-size: 24px; /* Adjust the font size as needed */
+  color: #000000; /* Color of the header text */
+  margin-right: 10px; /* Add spacing between the header and question mark */
+}
+
+.circle-button {
+  width: 24px; /* Adjust the size as needed */
+  height: 24px; /* Adjust the size as needed */
+  background-color: #000000; /* Background color of the circle */
+  border-radius: 50%; /* Makes it circular */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer; /* Change cursor to pointer for interaction */
+}
+
+.question-mark {
+  font-size: 14px; /* Adjust the font size as needed */
+  color: #fff; /* Color of the question mark */
+}

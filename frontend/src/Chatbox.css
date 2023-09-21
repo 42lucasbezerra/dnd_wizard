@@ -30,4 +30,6 @@
   
   .timestamp {
     clear: both;
+    text-align: left;
+    font-size: 8pt;
   }
