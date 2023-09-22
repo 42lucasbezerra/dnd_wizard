@@ -76,7 +76,7 @@ STATICFILES_DIRS = [
   os.path.join(BASE_DIR, "build/static"),
 ]
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+#STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 WSGI_APPLICATION = 'dnd_wizard.wsgi.application'
 

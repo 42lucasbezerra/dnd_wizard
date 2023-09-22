@@ -39,3 +39,44 @@
     color: rgb(7, 142, 179); /* Change the text color to blue to make it look like a link */
     font-weight: bold;
 }
+
+.roll-options-table {
+    background-color: rgb(193, 193, 193);
+}
+
+.roll-header {
+    background-color: rgb(11, 161, 203);
+    color: white;
+}
+
+.roll-modal {
+    background-color: rgb(255, 245, 232);
+}
+
+.arrow {
+    display: inline-block;
+    width: 0.5em; /* Adjust the width as needed */
+    height: 0.5em; /* Adjust the height as needed */
+    margin-left: 5px; /* Adjust the margin as needed to create space between the text and the arrow */
+    margin-bottom: 3px;
+    transform-origin: center;
+    transition: transform 0.3s; /* Add a smooth transition effect */
+  
+    /* Style the arrow with an empty triangle (>) */
+    content: "";
+    border-left: 0.25em solid transparent; /* Adjust the thickness as needed */
+    border-right: 0.25em solid transparent; /* Adjust the thickness as needed */
+    border-bottom: 0.25em solid black; /* Adjust the color and thickness as needed */
+  }
+  
+  .arrow.expanded {
+    transform: rotate(180deg); /* Rotate the arrow 180 degrees when expanded */
+    margin-top: 6px;
+    margin-bottom: 0px;
+  }
+
+  .arrow.collapsed {
+    transform: rotate(0deg);
+  }
+  
+  

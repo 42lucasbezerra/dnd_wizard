@@ -507,7 +507,7 @@ class App extends Component {
                   </span>
                   <span
                     style={{ marginLeft: '5px', cursor: 'pointer' }}
-                    onClick={() => this.renderAttributeInfo(capitalizeFirstLetter(attributeTitle).replace(/_/,' '))}
+                    onClick={() => this.renderAttributeInfo(capitalizeFirstLetter(attributeTitle.replace(/_/g,' ')))}
                   >
                     ℹ️
                   </span>
