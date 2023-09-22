@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 import './Chatbox.css';
-import { capitalizeFirstLetter } from "./components/utils";
+// import { capitalizeFirstLetter } from "./components/utils";
 
 class Chat extends Component {
     constructor(props) {

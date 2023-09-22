@@ -8,7 +8,7 @@ import {
 } from "reactstrap";
 
 import './custom-styles.css';
-import { capitalizeFirstLetter } from "./utils";
+// import { capitalizeFirstLetter } from "./utils";
 
 export default class RollModal extends Component {
     constructor(props) {
