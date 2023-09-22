@@ -1,3 +1,11 @@
+.attribute-header {
+    background-color: rgb(54, 0, 61);
+    color: white;
+}
+.attribute-modal {
+    background-color: rgb(231, 231, 231);
+}
+
 .weapon-modal {
     /*background-color: rgb(212, 194, 101);*/
     /* 151, 138, 70 */

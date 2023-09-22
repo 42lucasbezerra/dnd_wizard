@@ -29,15 +29,15 @@ const info = [
 const stats_2 = [
   'armor_class',
   'initiative',
-  'inspiration',
-  'proficiency',
   'speed',
+  'proficiency',
+  'inspiration',
   'experience_points',
   'total_hit_points',
   'current_hit_points',
   'temporary_hit_points',
-  'spell_save_dc',
   'spellcasting_ability',
+  'spell_save_dc',
   'spell_attack_bonus',
 ]
 
@@ -289,6 +289,27 @@ class App extends Component {
     this.setState({ spellModalOpen: !this.state.spellModalOpen });
   }
   // ---------------------------------------------------------------------- //
+
+  renderStats2 = () => {
+    const columnGroups = [];
+    for (let i = 0; i < stats_2.length; i += 3) {
+      columnGroups.push(stats_2.slice(i, i + 3));
+    }
+
+    return (
+      <div className="row">
+        {columnGroups.map((column, columnIndex) => (
+          <div key={columnIndex} className="col-3 mx-auto p-0">
+            {column.map((attribute, attributeIndex) => (
+              <div key={attributeIndex}>
+                {attribute}: {this.state.characterList[attribute]}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
 
   // ---------------------------- Dice Rolling ---------------------------- //
   handleRoll = (attribute, name) => {
@@ -601,6 +622,7 @@ charData = () => {
         </div>
         </div>
         <div className="container">
+          {this.renderStats2()}
         <div className="row">
           {this.renderAbility()}
           <div className="col-md-6 col-sm-10 mx-auto p-0">

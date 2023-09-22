@@ -25,6 +25,14 @@ export default class RollModal extends Component {
             [sectionName]: !prevState[sectionName],
         }));
     };
+
+    handleClosed = () => {
+        this.setState({ 
+            modifiersExpanded: false,
+            selectorsExpanded: false,
+            tableExpanded: false,
+        })
+    }
     
     render() {
         const { isOpen, toggle } = this.props;
@@ -32,7 +40,7 @@ export default class RollModal extends Component {
 
         return (
         <div>
-        <Modal isOpen={isOpen} toggle={toggle}>
+        <Modal isOpen={isOpen} toggle={toggle} onClosed={this.handleClosed}>
             <ModalHeader className="roll-header">On dice rolling</ModalHeader>
             <ModalBody className="roll-modal">
                 <p>The Roll Log will display any rolls made by clicking the "Roll!" button next to

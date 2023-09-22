@@ -61,6 +61,9 @@ class CharacterSerializer(serializers.ModelSerializer):
             'survival',
             'weapons',
             'spells',
+            'spell_save_dc',
+            'spellcasting_ability',
+            'spell_attack_bonus',
         )
 
 class WeaponSerializer(serializers.ModelSerializer):

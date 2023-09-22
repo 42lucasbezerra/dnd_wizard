@@ -101,7 +101,6 @@ def upload_file(request):
     if request.method == 'POST':
         
         user_form = UploadForm(request.POST, request.FILES)
-        print(request.FILES['myFile'])
         # Parse information from character sheet
         char_info, spells =  handle_uploaded_file(request.FILES['myFile'])
 

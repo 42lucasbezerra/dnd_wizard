@@ -17,13 +17,13 @@ export default class AttributeModal extends Component {
         return (
         <div>
         <Modal isOpen={isOpen} toggle={toggle}>
-            <ModalHeader className="weapon-header"><h4>{attribute.name}</h4></ModalHeader>
-            <ModalBody className="weapon-modal">
+            <ModalHeader className="attribute-header"><h4>{attribute.name}</h4></ModalHeader>
+            <ModalBody className="attribute-modal">
                 {descriptionLines.map((line, index) => (
                     <p key={index}>{line}</p>
                 ))}
             </ModalBody>
-            <ModalFooter className="weapon-header">
+            <ModalFooter className="attribute-header">
             <Button color="secondary" onClick={toggle}>
                 Close
             </Button>
