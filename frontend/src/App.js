@@ -73,35 +73,6 @@ const skills = [
 
 // ---------------------------------------------------------------------- //
 
-
-// -------------- Render Character General Info at the Top -------------- //
-function renderCharacterInfo(character) {
-  return (
-    <div>
-      <h2 className="text-black text-uppercase text-center my-4">{character.name}</h2>
-      <div className="row">
-        {info.slice(0, 3).map((field) => (
-          <div className="col">
-            <h5 key={field} className="text-center">
-              {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
-            </h5>
-          </div>
-        ))}
-      </div>
-      <div className="row">
-          {info.slice(3).map((field) => (
-            <div className="col">
-              <h5 key={field} className="text-center">
-                {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
-              </h5>
-            </div>
-          ))}
-      </div>
-    </div>
-  );
-}
-// ---------------------------------------------------------------------- //
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -175,6 +146,34 @@ class App extends Component {
     })
   }
   // -------------------------------------------------------- //
+
+  // -------------- Render Character General Info at the Top -------------- //
+  renderCharacterInfo = (character) => {
+    return (
+      <div>
+        <h2 className="text-black text-uppercase text-center my-4">{character.name}</h2>
+        <div className="row">
+          {info.slice(0, 3).map((field) => (
+            <div className="col">
+              <h5 key={field} className="text-center">
+                {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
+              </h5>
+            </div>
+          ))}
+        </div>
+        <div className="row">
+            {info.slice(3).map((field) => (
+              <div className="col">
+                <h5 key={field} className="text-center">
+                  {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
+                </h5>
+              </div>
+            ))}
+        </div>
+      </div>
+    );
+  }
+  // ---------------------------------------------------------------------- //
 
   // -------------- Functions to operate character Modal -------------- //
   onFileChange = event => {
@@ -618,7 +617,7 @@ charData = () => {
       <div className="container-fluid">
         <div className="p-2 mb-3 bg-info text-white mt-3">
           <div className="container" id="first_scroll">
-          {renderCharacterInfo(this.state.characterList)}
+          {this.renderCharacterInfo(this.state.characterList)}
         </div>
         </div>
         <div className="container">

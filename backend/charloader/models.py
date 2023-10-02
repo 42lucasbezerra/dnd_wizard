@@ -8,7 +8,7 @@ class Spell(models.Model):
     spell_name = models.CharField(max_length = 50)
     spell_level = models.IntegerField(default = 0, null = True, blank = True)
     spell_type = models.CharField(max_length = 50, blank = True, null = True)
-    casting_time = models.CharField(max_length = 50, blank = True, null = True)
+    casting_time = models.CharField(max_length = 70, blank = True, null = True)
     spell_range = models.CharField(max_length = 50, blank = True, null = True)
     components = models.TextField(null = True, blank = True)
     duration = models.CharField(max_length = 50, blank = True, null = True)
@@ -148,7 +148,7 @@ class Weapon(models.Model):
     
 
 class Ability(models.Model):
-    name = models.CharField(max_length = 30, verbose_name="Name")
+    name = models.CharField(max_length = 55, verbose_name="Name")
     description = models.TextField(null = True, blank = True)
     class_specific = models.JSONField(null = True, blank = True)
 
