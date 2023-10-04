@@ -1,35 +1,48 @@
+.outer-container {
+  padding-left: 10px;
+  /* Add padding to the outer container */
+}
+
 .chat-container {
-    display: flex;
-    flex-direction: column;
-    height: 300px; /* Set the fixed height for the chat container */
-    border: 1px solid #ccc; /* Optional: Add a border for the chat container */
-    overflow-y: auto; /* Enable vertical scrolling when content overflows */
-    background: rgb(179, 179, 179);
-  }
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  /* Set the fixed height for the chat container */
+  border: 1px solid #6e6e6e;
+  /* Optional: Add a border for the chat container */
+  overflow-y: auto;
+  /* Enable vertical scrolling when content overflows */
+  background: rgb(179, 179, 179);
+}
 
-  .chat-messages {
-    flex: 1; /* Allow chat-messages to expand and fill the container */
-    padding: 10px; /* Optional: Add padding to the messages */
-  }
-  
-  .chat-message {
-    margin-bottom: 8px; /* Optional: Add margin between messages */
-  }
+.chat-messages {
+  flex: 1;
+  /* Allow chat-messages to expand and fill the container */
+  padding: 10px;
+  /* Optional: Add padding to the messages */
+}
 
-  .left-justified {
-    text-align: left;
-    float: left;
-    width: 50%; /* Adjust this as needed */
-  }
-  
-  .right-justified {
-    text-align: right;
-    float: right;
-    width: 50%; /* Adjust this as needed */
-  }
-  
-  .timestamp {
-    clear: both;
-    text-align: left;
-    font-size: 8pt;
-  }
+.chat-message {
+  margin-bottom: 8px;
+  /* Optional: Add margin between messages */
+}
+
+.left-justified {
+  text-align: left;
+  float: left;
+  width: 50%;
+  /* Adjust this as needed */
+}
+
+.right-justified {
+  text-align: right;
+  float: right;
+  width: 50%;
+  /* Adjust this as needed */
+}
+
+.timestamp {
+  clear: both;
+  text-align: left;
+  font-size: 8pt;
+}

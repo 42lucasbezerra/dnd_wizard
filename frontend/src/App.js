@@ -112,7 +112,7 @@ class App extends Component {
     fetch('http://localhost:8000/api/get_spell_list/')
       .then(response => response.json())
       .then(data => {
-        this.setState({ spellList: data.spells , spell: data.spells[0]});
+        this.setState({ spellList: data.spells, spell: data.spells[0] });
       })
       .catch(error => {
         console.error('Error fetching spell list:', error);
@@ -122,7 +122,7 @@ class App extends Component {
     axios
       .get("http://localhost:8000/api/abilities/")
       .then((res) => {
-        this.setState({ abilityList: res.data, attribute:res.data[0] })
+        this.setState({ abilityList: res.data, attribute: res.data[0] })
       })
       .catch((err) => console.log(err));
 
@@ -134,15 +134,15 @@ class App extends Component {
   downloadFile = () => {
     // using Java Script method to get PDF file
     fetch('dnd-character-sheet.xlsx').then(response => {
-        response.blob().then(blob => {
-            // Creating new object of PDF file
-            const fileURL = window.URL.createObjectURL(blob);
-            // Setting various property values
-            let alink = document.createElement('a');
-            alink.href = fileURL;
-            alink.download = 'dnd-character-sheet.xlsx';
-            alink.click();
-        })
+      response.blob().then(blob => {
+        // Creating new object of PDF file
+        const fileURL = window.URL.createObjectURL(blob);
+        // Setting various property values
+        let alink = document.createElement('a');
+        alink.href = fileURL;
+        alink.download = 'dnd-character-sheet.xlsx';
+        alink.click();
+      })
     })
   }
   // -------------------------------------------------------- //
@@ -154,7 +154,7 @@ class App extends Component {
         <h2 className="text-black text-uppercase text-center my-4">{character.name}</h2>
         <div className="row">
           {info.slice(0, 3).map((field) => (
-            <div className="col">
+            <div key={field} className="col">
               <h5 key={field} className="text-center">
                 {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
               </h5>
@@ -162,13 +162,13 @@ class App extends Component {
           ))}
         </div>
         <div className="row">
-            {info.slice(3).map((field) => (
-              <div className="col">
-                <h5 key={field} className="text-center">
-                  {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
-                </h5>
-              </div>
-            ))}
+          {info.slice(3).map((field) => (
+            <div key={field} className="col">
+              <h5 className="text-center">
+                {capitalizeFirstLetter(field.replace('_', ' '))}: {character[field]}
+              </h5>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -182,7 +182,7 @@ class App extends Component {
 
   // On file upload (click the upload button)
   onFileUpload = async (event) => {
-  
+
     if (this.state.selectedFile) {
 
       // Create an object of formData
@@ -190,33 +190,33 @@ class App extends Component {
 
       // Update the formData object
       formData.append(
-          "myFile",
-          this.state.selectedFile,
+        "myFile",
+        this.state.selectedFile,
       );
 
       // Request made to the backend api
       // Send formData object
       try {
         const response = await axios.post("http://localhost:8000/api/uploadfile/", formData, {
-            headers: {
-                'content-type': 'multipart/form-data',
-            }
+          headers: {
+            'content-type': 'multipart/form-data',
+          }
         });
 
         const charID = response.data.id;
         this.setState({ uploaded: true, characterID: charID }, () => {
-            // After setting the state, call refreshList with the updated characterID
-            this.refreshList(charID);
-        
-            // Scroll to the element with id "scrollTarget"
-            const elementToScrollTo = document.getElementById("first_scroll");
-            if (elementToScrollTo) {
-              elementToScrollTo.scrollIntoView({ behavior: "smooth" });
-            }
-        
+          // After setting the state, call refreshList with the updated characterID
+          this.refreshList(charID);
+
+          // Scroll to the element with id "scrollTarget"
+          const elementToScrollTo = document.getElementById("first_scroll");
+          if (elementToScrollTo) {
+            elementToScrollTo.scrollIntoView({ behavior: "smooth" });
+          }
+
         });
       } catch (error) {
-          console.error("Error uploading file:", error);
+        console.error("Error uploading file:", error);
       }
     }
   };
@@ -265,7 +265,7 @@ class App extends Component {
   // ---------------------------- Weapon Information Functions ---------------------------- //
   renderWeaponInfo = (weaponName) => {
     this.getWeaponByName(weaponName);
-    this.setState({weaponModalOpen: true});
+    this.setState({ weaponModalOpen: true });
   };
 
   toggleWeapon = () => {
@@ -281,7 +281,7 @@ class App extends Component {
   }
 
   renderSpellInfo = (spell) => {
-    this.setState({spellModalOpen: true, spell: spell});
+    this.setState({ spellModalOpen: true, spell: spell });
   }
 
   toggleSpell = () => {
@@ -298,9 +298,9 @@ class App extends Component {
     return (
       <div className="row">
         {columnGroups.map((column, columnIndex) => (
-          <div key={columnIndex} className="col-3 mx-auto p-0">
+          <div key={column} className="col-3 mx-auto p-0">
             {column.map((attribute, attributeIndex) => (
-              <div key={attributeIndex}>
+              <div key={attribute}>
                 {attribute}: {this.state.characterList[attribute]}
               </div>
             ))}
@@ -312,30 +312,22 @@ class App extends Component {
 
   // ---------------------------- Dice Rolling ---------------------------- //
   handleRoll = (attribute, name) => {
-    // Simulate rolling a 20-sided die (d20)
-    /*const d20Roll = Math.floor(Math.random() * 20) + 1;
-  
-    // Calculate the total by adding the d20 roll and the modifier
-    const total = d20Roll + attribute;
-  
-    // Display the result or perform any other actions you need
-    alert(`You rolled a d20: ${d20Roll}\nModifier: ${attribute}\nTotal: ${total}`);*/
     const rollString = `1d20+${attribute}`;
 
     // Pass the rollString to Chat
-    this.setState({rollString, rollButtonClicked: true, rollName: name});
+    this.setState({ rollString, rollButtonClicked: true, rollName: name });
   };
 
   resetRollButtonClicked = () => {
     this.setState({ rollButtonClicked: false });
-  };     
+  };
 
   renderRollInfo = () => {
-    this.setState({rollModalOpen: true});
+    this.setState({ rollModalOpen: true });
   };
 
   toggleRoll = () => {
-    this.setState({ rollModalOpen: !this.state.rollModalOpen});
+    this.setState({ rollModalOpen: !this.state.rollModalOpen });
   };
   // ---------------------------------------------------------------------- //
   // ---------------------------- Render Ability/Saving Throw Information ---------------------------- //
@@ -345,7 +337,7 @@ class App extends Component {
   }
 
   toggleAttribute = () => {
-    this.setState({ attributeModalOpen: !this.state.attributeModalOpen});
+    this.setState({ attributeModalOpen: !this.state.attributeModalOpen });
   }
 
   // ---------------------------- Display Character Ability Scores ---------------------------- //
@@ -372,21 +364,21 @@ class App extends Component {
       <div className="col-3 mx-auto p-0">
         <h3><center>Ability Scores</center></h3>
         {stats.map(stat => (
-        <div className="card border rounded mb-4" style={{width: '7rem', height: '7.1rem'}}>
-          <div className="card-body">
-            <h5 className="card-title">{mapping[stat]}</h5>
-            <h2 className="card-subtitle mb-2 text-muted">
-              {((modifier) => (modifier >= 0 ? `+${modifier}` : modifier))(
-                Math.floor((this.state.characterList[stat] - 10) / 2)
-              )}&nbsp;
-            </h2>
-            <div className="card border rounded-circle" style={{ width: '2.5rem', height: '2.3rem' }} key={stat}>
-              <div className="card-round d-flex flex-column justify-content-center align-items-center text-center">
-                <p>{this.state.characterList[stat]}</p>
+          <div className="card border rounded mb-4" style={{ width: '7rem', height: '7.1rem' }}>
+            <div className="card-body">
+              <h5 className="card-title">{mapping[stat]}</h5>
+              <h2 className="card-subtitle mb-2 text-muted">
+                {((modifier) => (modifier >= 0 ? `+${modifier}` : modifier))(
+                  Math.floor((this.state.characterList[stat] - 10) / 2)
+                )}&nbsp;
+              </h2>
+              <div className="card border rounded-circle" style={{ width: '2.5rem', height: '2.3rem' }} key={stat}>
+                <div className="card-round d-flex flex-column justify-content-center align-items-center text-center">
+                  <p>{this.state.characterList[stat]}</p>
+                </div>
               </div>
             </div>
-          </div>
-        </div>))}
+          </div>))}
       </div>
     );
   };
@@ -396,7 +388,7 @@ class App extends Component {
   // ---------------------------- Create tabs for different information ---------------------------- //
   renderTabList = () => {
     const tabs = ['skills', 'saving_throws', 'spells', 'attacks'];
-  
+
     return (
       <div className="nav nav-tabs">
         {tabs.map(tab => (
@@ -441,11 +433,11 @@ class App extends Component {
         ))}
       </div>
     );
-  }; 
-  
+  };
+
   renderSpellItems = () => {
     const { spellLevel, spellList } = this.state;
-    
+
     // Filter the spell list by the selected spell level
     const spellLevelMap = {
       'Cantrips': 0,
@@ -459,11 +451,11 @@ class App extends Component {
       'Level 8': 8,
       'Level 9': 9,
     };
-    
+
     const spellsToRender = spellList.filter(spell => {
       return spellLevelMap[spellLevel] === spell.spell_level && this.state.characterList['spells'].includes(spell.spell_id);
     });
-          
+
     return (
       <div>
         <table className="table">
@@ -516,198 +508,198 @@ class App extends Component {
       return (
         <table className="table">
           <thead><tr><th>Name</th><th>Modifier</th></tr></thead>
-        <tbody>
-          {attributesToRender.map((attributeTitle) => {
-            const attribute = this.state.characterList[attributeTitle];
-            return (
-              <tr key={attributeTitle}>
-                <td>
-                  <span>
-                    {(attributeTitle.replace('saving_throw_','').charAt(0).toUpperCase() + attributeTitle.replace('saving_throw_','').slice(1)).replaceAll('_', ' ')}
-                  </span>
-                  <span
-                    style={{ marginLeft: '5px', cursor: 'pointer' }}
-                    onClick={() => this.renderAttributeInfo(capitalizeFirstLetter(attributeTitle.replace(/_/g,' ')))}
-                  >
-                    ℹ️
-                  </span>
-                </td>
-                <td className="d-flex flex-column">
-                  <span>
-                    {attribute >= 0 ? "+" : ""}{attribute}
-                  </span>
-                </td>
-                <td>
-                  <button className="btn btn-secondary mr-2"
-                  onClick={() => this.editItem(attributeTitle)}>Edit</button>
-                  <button className="btn btn-primary" onClick={() => this.handleRoll(attribute, formatSavingThrow(attributeTitle))}>
-                  Roll
-                  </button>
+          <tbody>
+            {attributesToRender.map((attributeTitle) => {
+              const attribute = this.state.characterList[attributeTitle];
+              return (
+                <tr key={attributeTitle}>
+                  <td>
+                    <span>
+                      {(attributeTitle.replace('saving_throw_', '').charAt(0).toUpperCase() + attributeTitle.replace('saving_throw_', '').slice(1)).replaceAll('_', ' ')}
+                    </span>
+                    <span
+                      style={{ marginLeft: '5px', cursor: 'pointer' }}
+                      onClick={() => this.renderAttributeInfo(capitalizeFirstLetter(attributeTitle.replace(/_/g, ' ')))}
+                    >
+                      ℹ️
+                    </span>
                   </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  } else if (whichView === 'attacks') {
-    return (
-      <table className="table">
-        <thead>
-          <tr>
-        <th>Name</th>
-        <th>Atk Bonus</th>
-        <th></th>
-        </tr>
-        </thead>
-      <tbody>
-        {attributesToRender.map((weapon_object) => {
-          return (
-            <tr key={weapon_object['name']}>
-              <td>
-                <span>
-                  <span
-                    className={weapon_object['proficiency'] ? 'proficient-weapon' : 'non-proficient-weapon'}
-                    title={weapon_object['proficiency'] ? 'Proficient' : 'Not Proficient'}
-                  >
-                    {capitalizeFirstLetter(weapon_object['name'])}
-                  </span>
-                  <span
-                    style={{ marginLeft: '5px', cursor: 'pointer' }}
-                    onClick={() => this.renderWeaponInfo(weapon_object['name'])}
-                  >
-                    ℹ️
-                  </span>
-                </span>
-              </td>
-              <td className="d-flex flex-column">
-                <span>
-                  <center>{weapon_object['atk_bonus'] !== null ? (weapon_object['atk_bonus'] > 0 ? "+" : "") : "?"}{weapon_object['atk_bonus']}</center>
-                </span>
-              </td>
-              <td>
-                <button className="btn btn-secondary mr-2"
-                onClick={() => this.editItem(weapon_object)}>Edit</button>
-                <button className="btn btn-primary" onClick={() => this.handleRoll(weapon_object['atk_bonus'], weapon_object['name'])}>
-                Roll
-                </button>
-              </td>
+                  <td className="d-flex flex-column">
+                    <span>
+                      {attribute >= 0 ? "+" : ""}{attribute}
+                    </span>
+                  </td>
+                  <td>
+                    <button className="btn btn-secondary mr-2"
+                      onClick={() => this.editItem(attributeTitle)}>Edit</button>
+                    <button className="btn btn-primary" onClick={() => this.handleRoll(attribute, formatSavingThrow(attributeTitle))}>
+                      Roll
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
+    } else if (whichView === 'attacks') {
+      return (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Atk Bonus</th>
+              <th></th>
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
-  );
-  } else if (whichView === 'spells') {
-    return(
-      <div>
-      {this.renderSpellTabs()}
-      {this.renderSpellItems()}
-      </div>
-    );
-  }
-};
-// ------------------------------------------------------------------------------------ //
+          </thead>
+          <tbody>
+            {attributesToRender.map((weapon_object) => {
+              return (
+                <tr key={weapon_object['name']}>
+                  <td>
+                    <span>
+                      <span
+                        className={weapon_object['proficiency'] ? 'proficient-weapon' : 'non-proficient-weapon'}
+                        title={weapon_object['proficiency'] ? 'Proficient' : 'Not Proficient'}
+                      >
+                        {capitalizeFirstLetter(weapon_object['name'])}
+                      </span>
+                      <span
+                        style={{ marginLeft: '5px', cursor: 'pointer' }}
+                        onClick={() => this.renderWeaponInfo(weapon_object['name'])}
+                      >
+                        ℹ️
+                      </span>
+                    </span>
+                  </td>
+                  <td className="d-flex flex-column">
+                    <span>
+                      <center>{weapon_object['atk_bonus'] !== null ? (weapon_object['atk_bonus'] > 0 ? "+" : "") : "?"}{weapon_object['atk_bonus']}</center>
+                    </span>
+                  </td>
+                  <td>
+                    <button className="btn btn-secondary mr-2"
+                      onClick={() => this.editItem(weapon_object)}>Edit</button>
+                    <button className="btn btn-primary" onClick={() => this.handleRoll(weapon_object['atk_bonus'], weapon_object['name'])}>
+                      Roll
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      );
+    } else if (whichView === 'spells') {
+      return (
+        <div>
+          {this.renderSpellTabs()}
+          {this.renderSpellItems()}
+        </div>
+      );
+    }
+  };
+  // ------------------------------------------------------------------------------------ //
 
 
-// -------------- Display character Information if file is uploaded -------------- //
-charData = () => {
-  if (this.state.uploaded && this.state.selectedFile) {
-    return (
-      <div className="container-fluid">
-        <div className="p-2 mb-3 bg-info text-white mt-3">
-          <div className="container" id="first_scroll">
-          {this.renderCharacterInfo(this.state.characterList)}
-        </div>
-        </div>
-        <div className="container">
-          {this.renderStats2()}
-        <div className="row">
-          {this.renderAbility()}
-          <div className="col-md-6 col-sm-10 mx-auto p-0">
-            <div className="card p-3">
-              {this.renderTabList()}
-                {this.renderItems()}
+  // -------------- Display character Information if file is uploaded -------------- //
+  charData = () => {
+    if (this.state.uploaded && this.state.selectedFile) {
+      return (
+        <div className="container-fluid">
+          <div className="p-2 mb-3 bg-info text-white mt-3">
+            <div className="container" id="first_scroll">
+              {this.renderCharacterInfo(this.state.characterList)}
             </div>
           </div>
-          <div className="col mx-auto p-0">
-          <div className="header-container">
-            <h4 className="header-text">Roll log</h4>
-            <div className="circle-button" onClick={() => this.renderRollInfo()}>
-              <span className="question-mark">?</span>
+          <div className="container">
+            {this.renderStats2()}
+            <div className="row">
+              {this.renderAbility()}
+              <div className="col-md-6 col-sm-10 mx-auto p-0">
+                <div className="card p-3">
+                  {this.renderTabList()}
+                  {this.renderItems()}
+                </div>
+              </div>
+              <div className="col mx-auto p-0">
+                <div className="header-container">
+                  <h4 className="header-text">Roll log</h4>
+                  <div className="circle-button" onClick={() => this.renderRollInfo()}>
+                    <span className="question-mark">?</span>
+                  </div>
+                </div>
+                <Chat rollString={this.state.rollString} rollName={this.state.rollName} rollButtonClicked={this.state.rollButtonClicked} resetRollButtonClicked={this.resetRollButtonClicked} />
+              </div>
             </div>
           </div>
-              <Chat rollString={this.state.rollString} rollName={this.state.rollName} rollButtonClicked={this.state.rollButtonClicked} resetRollButtonClicked={this.resetRollButtonClicked}/>
-          </div>
-        </div>
-        </div>
-        {this.state.characterInfoModalOpen ? (
-          <CharacterInfoModal
-            activeItem={this.state.activeItem}
-            Character={this.state.characterList}
-            toggle={this.toggle}
-            onSave={this.handleSubmit}
+          {this.state.characterInfoModalOpen ? (
+            <CharacterInfoModal
+              activeItem={this.state.activeItem}
+              Character={this.state.characterList}
+              toggle={this.toggle}
+              onSave={this.handleSubmit}
+            />
+          ) : null}
+          <WeaponModal
+            isOpen={this.state.weaponModalOpen}
+            toggle={this.toggleWeapon}
+            weaponInfo={this.state.weapon}
           />
-        ) : null}
-        <WeaponModal
-          isOpen={this.state.weaponModalOpen}
-          toggle={this.toggleWeapon}
-          weaponInfo={this.state.weapon}
-        />
-        <SpellModal
-          isOpen={this.state.spellModalOpen}
-          toggle={this.toggleSpell}
-          spellInfo={this.state.spell}
-        />
-        <RollModal
-          isOpen={this.state.rollModalOpen}
-          toggle={this.toggleRoll}
-        />
-        <AttributeModal
-          isOpen={this.state.attributeModalOpen}
-          toggle={this.toggleAttribute}
-          attribute={this.state.attribute}
-        />
-      </div>
-    );
-  }
-};
-// ---------------------------------------------------------------------- //
+          <SpellModal
+            isOpen={this.state.spellModalOpen}
+            toggle={this.toggleSpell}
+            spellInfo={this.state.spell}
+          />
+          <RollModal
+            isOpen={this.state.rollModalOpen}
+            toggle={this.toggleRoll}
+          />
+          <AttributeModal
+            isOpen={this.state.attributeModalOpen}
+            toggle={this.toggleAttribute}
+            attribute={this.state.attribute}
+          />
+        </div>
+      );
+    }
+  };
+  // ---------------------------------------------------------------------- //
 
 
   // ---------------------------- Render ---------------------------- //
   render() {
     return (
       <main><center>
-      <div className="container">
+        <div className="container">
           <h3>
-              Upload your character sheet below!
+            Upload your character sheet below!
           </h3>
-      
+
           <div>
-              <input type="file" onChange={this.onFileChange} />
-              <button onClick={this.onFileUpload}>
-                  Upload!
-              </button>
+            <input type="file" onChange={this.onFileChange} />
+            <button onClick={this.onFileUpload}>
+              Upload!
+            </button>
           </div> <br />
           <div>
-          <h5>Or download the character sheet template:</h5>
-            <button type="button" class="btn btn-success" onClick={this.downloadFile}><svg xmlns="http://www.w3.org/2000/svg" width="16" 
-                  height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
-                  ::before
-                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 
+            <h5>Or download the character sheet template:</h5>
+            <button type="button" class="btn btn-success" onClick={this.downloadFile}><svg xmlns="http://www.w3.org/2000/svg" width="16"
+              height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+              ::before
+              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 
                   0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"></path>
-                  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 
+              <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 
                   0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"></path>
-              </svg>
+            </svg>
               &nbsp;Lightweight character sheet 5e
             </button>
           </div>
         </div>
-          {this.charData()}
+        {this.charData()}
       </center>
       </main>
-  );
+    );
   };
 }
 // ---------------------------------------------------------------------- //
