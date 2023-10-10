@@ -1,5 +1,4 @@
 db.sqlite3
-data.json
 dnd_wizard/settings.py
 .env
 wizard_env/
