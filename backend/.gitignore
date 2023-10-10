@@ -2,3 +2,8 @@ db.sqlite3
 data.json
 dnd_wizard/settings.py
 .env
+wizard_env/
+charloader/migrations/__pycache__/
+charloader/__pycache__/
+charloader/functions/__pycache__/
+dnd_wizard/__pycache__/
