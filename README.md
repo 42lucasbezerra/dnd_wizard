@@ -20,3 +20,33 @@ These instructions will help you set up and run D&D Character Loader on your loc
 - [Django Rest Framework](https://www.django-rest-framework.org/#installation) (>=3.11)
 
 ### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/dnd-character-loader.git
+   cd dnd-character-loader
+
+2. Create a virtual environment:
+   ```bash
+   python -m venv myenv
+   
+4. Activate the virtual environment:
+   - Windows:
+     ```bash
+     myenv\Scripts\activate
+   - macOS and Linux:
+     ```bash
+     source myenv/bin/activate
+5. Install project dependencies:
+   ```bash
+   pip install -r requiements.txt
+6. Apply migrations:
+   ```bash
+   python manage.py migrate
+8. Load data from JSON dump:
+   ```bash
+   python manage.py loaddata data.json
+10. Start the development server
+    ```bash
+    python manage.py runserver
