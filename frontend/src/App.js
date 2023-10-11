@@ -10,6 +10,8 @@ import Chat from "./Chatbox";
 
 import { capitalizeFirstLetter, formatSavingThrow } from "./components/utils";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 /* Option for d20 button, potentially!
 <a href={process.env.PUBLIC_URL + '/dice-d20.svg'} target="_blank" rel="noopener noreferrer" className="d20-button">
   <span role="img" aria-label="d20">🎲</span>
@@ -102,14 +104,14 @@ class App extends Component {
 
   getWeaponByName = (weaponName) => {
     axios
-      .get("http://localhost:8000/api/weapons/" + String(weaponName) + "/")
+      .get("{apiUrl}/api/weapons/" + String(weaponName) + "/")
       .then((res) => this.setState({ weapon: res.data }))
       .catch((err) => console.log(err));
   };
 
   componentDidMount() {
     // Fetch spell list from the backend API
-    fetch('http://localhost:8000/api/get_spell_list/')
+    fetch('{apiUrl}/api/get_spell_list/')
       .then(response => response.json())
       .then(data => {
         this.setState({ spellList: data.spells, spell: data.spells[0] });
@@ -120,7 +122,7 @@ class App extends Component {
 
     // Get the ability list as well
     axios
-      .get("http://localhost:8000/api/abilities/")
+      .get("{apiUrl}/api/abilities/")
       .then((res) => {
         this.setState({ abilityList: res.data, attribute: res.data[0] })
       })
@@ -197,7 +199,7 @@ class App extends Component {
       // Request made to the backend api
       // Send formData object
       try {
-        const response = await axios.post("http://localhost:8000/api/uploadfile/", formData, {
+        const response = await axios.post("{apiUrl}/api/uploadfile/", formData, {
           headers: {
             'content-type': 'multipart/form-data',
           }
@@ -223,7 +225,7 @@ class App extends Component {
 
   refreshList = () => {
     axios
-      .get("http://localhost:8000/api/characters/" + String(this.state.characterID) + "/")
+      .get("{apiUrl}/api/characters/" + String(this.state.characterID) + "/")
       .then((res) => this.setState({ characterList: res.data }))
       .catch((err) => console.log(err));
   };
@@ -237,12 +239,12 @@ class App extends Component {
 
     if (item.id) {
       axios
-        .put(`http://localhost:8000/api/characters/${item.id}/`, item)
+        .put(`{apiUrl}/api/characters/${item.id}/`, item)
         .then((res) => this.refreshList());
       return;
     }
     axios
-      .post("http://localhost:8000/api/characters/", item)
+      .post("{apiUrl}/api/characters/", item)
       .then((res) => this.refreshList());
   };
 

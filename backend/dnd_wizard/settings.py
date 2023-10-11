@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", ".fly.dev"]
 
 
 # Application definition
@@ -138,13 +138,4 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
-
-"""CORS_ORIGIN_WHITELIST = [
-'http://localhost:3000',
-'http://127.0.0.1:3000'
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]"""
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000", "https://*.fly.dev"]

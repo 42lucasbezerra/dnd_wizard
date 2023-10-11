@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/static/css/main.cdbb1900.css",
-    "main.js": "/static/js/main.ff881ab8.js",
+    "main.js": "/static/js/main.b77b1c52.js",
     "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
     "static/media/space.jpg": "/static/media/space.eba1417f9da81562645b.jpg",
     "static/media/weapon_scroll.PNG": "/static/media/weapon_scroll.8b028e13b0c43baea75e.PNG",
     "static/media/wood.jpg": "/static/media/wood.29e4052d0745fa3348fa.jpg",
     "index.html": "/index.html",
     "main.cdbb1900.css.map": "/static/css/main.cdbb1900.css.map",
-    "main.ff881ab8.js.map": "/static/js/main.ff881ab8.js.map",
+    "main.b77b1c52.js.map": "/static/js/main.b77b1c52.js.map",
     "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.cdbb1900.css",
-    "static/js/main.ff881ab8.js"
+    "static/js/main.b77b1c52.js"
   ]
 }
