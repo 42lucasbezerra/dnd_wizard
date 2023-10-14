@@ -33,8 +33,8 @@ export default class CharacterInfoModal extends Component {
 
     return (
       <Modal isOpen={true} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Edit attribute</ModalHeader>
-        <ModalBody>
+        <ModalHeader className="attribute-header" toggle={toggle}>Edit attribute</ModalHeader>
+        <ModalBody className="attribute-modal">
           <Form>
             <FormGroup>
               <Label for="attribute">{ this.state.activeItem.replace('_', ' ') }</Label>
@@ -49,7 +49,7 @@ export default class CharacterInfoModal extends Component {
             </FormGroup>
           </Form>
         </ModalBody>
-        <ModalFooter>
+        <ModalFooter className="attribute-header">
           <Button
             color="success"
             onClick={() => onSave(this.state.Character)}
