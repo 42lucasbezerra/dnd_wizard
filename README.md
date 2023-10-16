@@ -24,8 +24,8 @@ These instructions will help you set up and run D&D Character Loader on your loc
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/dnd-character-loader.git
-   cd dnd-character-loader
+   git clone https://github.com/42lucasbezerra/dnd_wizard.git
+   cd dnd_wizard
 
 2. Create a virtual environment:
    ```bash
