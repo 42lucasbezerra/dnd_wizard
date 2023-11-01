@@ -12,7 +12,7 @@
   /* Optional: Add a border for the chat container */
   overflow-y: auto;
   /* Enable vertical scrolling when content overflows */
-  background: rgb(179, 179, 179);
+  background: rgb(238, 238, 238);
 }
 
 .chat-messages {

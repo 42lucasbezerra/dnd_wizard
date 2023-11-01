@@ -104,6 +104,7 @@ def handle_uploaded_file(f):
         "spell_attack_bonus": spell_attack_bonus,
     }
 
+    print(char_info['acrobatics'])
     return char_info, spells
 
 
