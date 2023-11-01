@@ -7,6 +7,8 @@ This enables automatic rolling for skills and saving throws, as well as spell an
 Currently does not allow characters to be accessed from database; character sheets must be uploaded every time to access the character information.
 Limited support for multiclassing.
 
+![](https://github.com/42lucasbezerra/dnd_wizard/blob/main/demo2.gif)
+
 ## Features
 
 ## Getting Started
